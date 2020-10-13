@@ -1,0 +1,70 @@
+﻿@page "/galloDetails"
+@page "/galloDetails/{id:int}"
+@inject GalloService galloService
+@inject NavigationManager NavigationManager
+
+<h2>Gallo Detalles</h2>
+<EditForm Model="@entity">
+    @*<table class="table">
+            <tr>
+                <td>Nombre:</td>
+                <td><input class="input-group col-sm-4" type="text" @bind="entity.Nombre"/></td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="text-align:center">
+                    <input class="btn btn-success" type="submit" value="Save" @onclick="@SaveGallo"/>
+                    <input class="btn btn-danger" type="button" value="Cancel"/>
+                </td>
+            </tr>
+        </table>*@
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="Alias" class="control-label">Alias:</label>
+                <input for="Alias" class="form-control" @bind="entity.Alias" />
+            </div>
+            <div class="form-group">
+                <label for="Matricula" class="control-label">Matrícula:</label>
+                <input for="Matricula" class="form-control" @bind="entity.Matricula" />
+            </div>
+            <div class="form-group">
+                <label for="FechaNacimiento" class="control-label">Fecha Nacimiento:</label>
+                <input for="FechaNacimiento" type="date" class="form-control" @bind="entity.FechaNacimiento" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input class="btn btn-success" type="submit" value="Save" @onclick="@SaveGallo" />
+                <input class="btn btn-danger" type="button" value="Cancel" @onclick="@Cancel" />
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private Gallo entity = new Gallo();
+
+    protected async Task SaveGallo()
+    {
+        if (await galloService.Save(entity))
+            NavigationManager.NavigateTo("GallosList");
+    }
+
+    protected void Cancel()
+    {
+        NavigationManager.NavigateTo("GallosList");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (id > 0)
+            entity = await galloService.Get(id);
+    }
+}

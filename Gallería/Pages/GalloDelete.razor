@@ -1,0 +1,62 @@
+﻿@page "/galloDelete/{id:int}"
+@inject GalloService galloService
+@inject NavigationManager NavigationManager
+
+<h2>Borrar Gallo</h2>
+<br />
+<h3>¿Esta seguro de eliminar este gallo?</h3>
+<EditForm Model="@entity">
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="Id" class="control-label">Id:</label>
+                <input for="Alias" disabled class="form-control" @bind="entity.Id" />
+            </div>
+            <div class="form-group">
+                <label for="Alias" class="control-label">Alias:</label>
+                <input for="Alias" disabled class="form-control" @bind="entity.Alias" />
+            </div>
+            <div class="form-group">
+                <label for="Matricula" class="control-label">Matrícula:</label>
+                <input for="Matricula" disabled class="form-control" @bind="entity.Matricula" />
+            </div>
+            <div class="form-group">
+                <label for="FechaNacimiento" class="control-label">Fecha Nacimiento:</label>
+                <input for="FechaNacimiento" type="date" disabled class="form-control" @bind="entity.FechaNacimiento" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input class="btn btn-danger" type="button" value="Borrar" @onclick="@BorrarGallo" />
+                <input class="btn btn-primary" type="button" value="Cancelar" @onclick="@Cancel" />
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private Gallo entity = new Gallo();
+
+    protected async Task BorrarGallo()
+    {
+        if (await galloService.Delete(id))
+            NavigationManager.NavigateTo("GallosList");
+    }
+
+    protected void Cancel()
+    {
+        NavigationManager.NavigateTo("GallosList");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (id > 0)
+            entity = await galloService.Get(id);
+    }
+}

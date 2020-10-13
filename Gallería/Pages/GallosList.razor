@@ -1,0 +1,69 @@
+﻿@page "/gallosList"
+@inject GalloService galloService
+@inject NavigationManager NavigationManager
+@message
+
+    <div>
+        <h2>Gallos</h2>
+        <input class="btn btn-success toRight" type="submit" value="Nuevo" @onclick="NavigateTo" />
+    </div>
+
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Matricula</th>
+                    <th>Alias</th>
+                    <th>Fecha Nacimiento</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var gallo in gallos)
+                {
+                <tr>
+                    <td>@gallo.Id</td>
+                    <td>@gallo.Matricula</td>
+                    <td>@gallo.Alias</td>
+                    <td>@gallo.FechaNacimiento.ToShortDateString()</td>
+                    <td>
+                        <a href="/GalloDetails/@gallo.Id">
+                            <btn class="btn btn-primary" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
+                                <span class="oi oi-pencil" />
+                            </btn>
+                        </a>
+                        <a href="/GalloDelete/@gallo.Id">
+                            <btn class="btn btn-danger" type="submit" value="Agregar"src="~/css/open-iconic/font/fonts/">
+                                <span class="oi oi-trash" />
+                            </btn>
+                        </a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+@code
+{
+    private List<Gallo> gallos = new List<Gallo>();
+    private string message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            gallos = await galloService.All();
+        }
+        catch (Exception ex)
+        {
+            message = ex.Message;
+        }
+    }
+
+    private void NavigateTo()
+    {
+        NavigationManager.NavigateTo("GalloDetails");
+    }
+}
