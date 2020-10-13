@@ -1,0 +1,65 @@
+﻿@page "/tipogalloList"
+@inject TipoGalloService tipogalloService
+@inject NavigationManager NavigationManager
+@message
+
+<div>
+    <h2>Tipo Gallo</h2>
+    <input class="btn btn-success toRight" type="submit" value="Nuevo" @onclick="NavigateTo" />
+</div>
+
+<div class="row">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Descripcion</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tg in tipoGallos)
+            {
+                <tr>
+                    <td>@tg.Id</td>
+                    <td>@tg.Descripcion</td>
+                    <td>
+                        <a href="/TipoGalloDetails/@tg.Id">
+                            <btn class="btn btn-primary" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
+                                <span class="oi oi-pencil" />
+                            </btn>
+                        </a>
+                        <a href="/TipoGalloDelete/@tg.Id">
+                            <btn class="btn btn-danger" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
+                                <span class="oi oi-trash" />
+                            </btn>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code
+{
+    private List<TipoGallo> tipoGallos = new List<TipoGallo>();
+    private string message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            tipoGallos = await tipogalloService.All();
+        }
+        catch (Exception ex)
+        {
+            message = ex.Message;
+        }
+    }
+
+    private void NavigateTo()
+    {
+        NavigationManager.NavigateTo("TipoGalloDetails");
+    }
+}
