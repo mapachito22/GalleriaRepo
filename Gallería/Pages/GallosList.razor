@@ -50,8 +50,18 @@
     private List<Gallo> gallos = new List<Gallo>();
     private string message;
 
+    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            var returnUrl =
+                NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            NavigationManager.NavigateTo($"/identity/account/login?returnUrl={"~/" + returnUrl}");
+        }
         try
         {
             gallos = await galloService.All();

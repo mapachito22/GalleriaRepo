@@ -54,9 +54,21 @@
         NavigationManager.NavigateTo("GallosList");
     }
 
+    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            var returnUrl =
+                NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            NavigationManager.NavigateTo($"/identity/account/login?returnUrl={"~/" + returnUrl}");
+        }
+
         if (id > 0)
             entity = await galloService.Get(id);
     }
+
 }
