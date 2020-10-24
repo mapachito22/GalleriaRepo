@@ -2,6 +2,8 @@
 @page "/galloDetails/{id:int}"
 @inject GalloService galloService
 @inject NavigationManager NavigationManager
+@using BlazorInputFile
+
 
 <h2>Gallo Detalles</h2>
 <EditForm Model="@entity">
@@ -31,6 +33,24 @@
         </div>
     </div>
 
+    <br />
+    <br />
+
+    <h1 class="DragAndDrop">Arrastra y suelta la imagen</h1>
+
+    <p class="DragAndDrop">Puede arrastrar varias imagenes a la vez</p>
+
+    <div class="DragAndDrop drag-drop-zone">
+        <InputFile OnChange="ViewFile" />
+        @status
+    </div>
+
+    @if (fileName != null)
+    {
+        <h3 class="DragAndDrop">@fileName</h3>
+        <pre class="DragAndDrop">@fileTextContents</pre>
+    }
+
 </EditForm>
 
 @code {
@@ -39,6 +59,13 @@
     private Gallo entity = new Gallo();
 
     [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+
+    const string DefaultStatus = "Suelta un archivo de texto aquí para verlo o haz clic para elegir un archivo";
+    const int MaxFileSize = 5 * 1024 * 1024; // 5MB
+    string status = DefaultStatus;
+
+    string fileName;
+    string fileTextContents;
 
     protected async Task SaveGallo()
     {
@@ -65,6 +92,31 @@
 
         if (id > 0)
             entity = await galloService.Get(id);
+    }
+
+    async Task ViewFile(IFileListEntry[] files)
+    {
+        var file = files.FirstOrDefault();
+        if (file == null)
+        {
+            return;
+        }
+        else if (file.Size > MaxFileSize)
+        {
+            status = $"That's too big. Max size: {MaxFileSize} bytes.";
+        }
+        else
+        {
+            status = "Loading...";
+
+            using (var reader = new StreamReader(file.Data))
+            {
+                fileTextContents = await reader.ReadToEndAsync();
+                fileName = file.Name;
+            }
+
+            status = DefaultStatus;
+        }
     }
 
 }

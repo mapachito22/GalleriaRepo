@@ -188,4 +188,113 @@ app {
     {
         position: relative;
     }
+
+    ﻿body.DragAndDrop {
+        font-family: sans-serif;
+        margin: 0;
+    }
+
+    main.DragAndDrop, nav.DragAndDrop {
+        padding: 1.25rem 2rem;
+    }
+
+    h1.DragAndDrop, h2.DragAndDrop, h3.DragAndDrop, h4.DragAndDrop, h5.DragAndDrop {
+        margin-top: 1rem;
+    }
+
+    nav.DragAndDrop {
+        background-color: #c9c9c9;
+        display: flex;
+        align-items: center;
+        color: #3d3d3d;
+        box-shadow: 0 0 3px;
+    }
+
+    nav.DragAndDrop a.DragAndDrop {
+        text-decoration: none;
+        background-color: #eeeeee;
+        color: black;
+        padding: 0.3rem 1rem;
+        display: inline-block;
+        box-shadow: 0 0 3px rgba(0,0,0,0.4);
+    }
+
+    nav.DragAndDrop a.DragAndDrop:first-of-type {
+        margin-left: 0.6rem;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+
+    nav.DragAndDrop a.DragAndDrop:last-of-type {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
+    nav.DragAndDrop a.DragAndDrop:hover {
+        background-color: white;
+    }
+
+    nav.DragAndDrop a.DragAndDrop.active, nav a.DragAndDrop.active:hover {
+        background-color: #3069f6;
+        color: white;
+    }
+
+    .file-row {
+        background-color: #e4e4e4;
+        padding: 1rem 1.5rem;
+        margin-top: 1rem;
+        border-radius: 0.6rem;
+        color: #555;
+        display: flex;
+        align-items: center;
+    }
+
+    .file-row h2 {
+        margin: 0.3rem 0 0.6rem 0;
+        font-weight: bold;
+        color: black;
+        font-size: 1.1rem;
+    }
+
+    .file-row > div {
+        flex-grow: 1;
+    }
+
+    .file-row button {
+        padding: 0.5rem 1rem;
+    }
+
+    .drag-drop-zone {
+        border: 3px dashed #8B0B9C;
+        padding: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #eee;
+        box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+        color: #aeaeae;
+        font-size: 1.5rem;
+        cursor: pointer;
+        margin: 1.5rem 0 2rem 0;
+        position: relative;
+    }
+
+        .drag-drop-zone:hover {
+            background-color: #f5f5f5;
+        }
+
+        .drag-drop-zone input[type=file] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+    pre.DragAndDrop {
+        background-color: #f0f0f0;
+        overflow: auto;
+        padding: 1rem;
+        height: 10rem;
+    }
 }
