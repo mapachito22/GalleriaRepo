@@ -6,7 +6,7 @@
 
 
 <h2>Gallo Detalles</h2>
-<EditForm Model="@entity">
+<EditForm Model="@this.entity">
 
     <div class="row">
         <div class="col-md-8">
@@ -23,14 +23,47 @@
                 <input for="FechaNacimiento" type="date" class="form-control" @bind="entity.FechaNacimiento" />
             </div>
         </div>
-
-        <div class="col-md-8">
-            <input type="file" form="Image" class="form-control">
-
-        </div>
-
-
     </div>
+
+    <br />
+    
+    <div>
+        <div>
+            <h1 class="DragAndDrop">Arrastra y suelta la imagen</h1>
+            <p class="DragAndDrop">Puede arrastrar varias imagenes a la vez</p>
+            <div>
+                <input class="btn btn-success" type="submit" value="Borrar" @onclick="borrasImagenes" />
+            </div>
+            </div>
+        <div class="DragAndDrop drag-drop-zone">
+            @if (ImagenesUrls.Count <= 0)
+            {
+                <InputFile multiple OnChange="ViewFile" />
+                @status
+            }
+            else
+            {
+                <div class="image-list"> 
+                    <table class="table table-bordered col-md-3">
+                        <tr>
+                            @foreach (var item in ImagenesUrls)
+                            {
+                                <td>
+                                   <div class="row">
+                                       <div class="col-lg-12">
+                                           <img src="@item" class="img-fluid" />
+                                       </div>
+                                   </div>
+                            
+                                </td>
+                            }
+                        </tr>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
@@ -39,25 +72,6 @@
             </div>
         </div>
     </div>
-
-    <br />
-    <br />
-
-    <h1 class="DragAndDrop">Arrastra y suelta la imagen</h1>
-
-    <p class="DragAndDrop">Puede arrastrar varias imagenes a la vez</p>
-
-    <div class="DragAndDrop drag-drop-zone">
-        <InputFile OnChange="ViewFile" />
-        @status
-    </div>
-
-    @if (fileName != null)
-    {
-        <h3 class="DragAndDrop">@fileName</h3>
-        <pre class="DragAndDrop">@fileTextContents</pre>
-    }
-
 </EditForm>
 
 @code {
@@ -80,6 +94,12 @@
             NavigationManager.NavigateTo("GallosList");
     }
 
+    protected void borrasImagenes()
+    {
+        ImagenesUrls.Clear();
+        status = DefaultStatus;
+    }
+
     protected void Cancel()
     {
         NavigationManager.NavigateTo("GallosList");
@@ -87,7 +107,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-
         base.OnInitialized();
         var user = (await AuthStat).User;
         if (!user.Identity.IsAuthenticated)
@@ -100,28 +119,42 @@
         if (id > 0)
             entity = await galloService.Get(id);
     }
+    IList<String> ImagenesUrls = new List<String>();
 
     async Task ViewFile(IFileListEntry[] files)
     {
-        var file = files.FirstOrDefault();
-        if (file == null)
+        if (files.Count() <= 0)
         {
             return;
-        }
-        else if (file.Size > MaxFileSize)
-        {
-            status = $"That's too big. Max size: {MaxFileSize} bytes.";
         }
         else
         {
             status = "Loading...";
+            var format = "image/jpg";
+            int conteo = 0;
 
-            using (var reader = new StreamReader(file.Data))
+            foreach (var file in files)
             {
-                fileTextContents = await reader.ReadToEndAsync();
-                fileName = file.Name;
-            }
+                if(conteo == 3)
+                {
+                    conteo = 0;
+                    return;
+                }
 
+                conteo++;
+                if (file.Size > MaxFileSize)
+                {
+                    status = $"That's too big. Max size: {MaxFileSize} bytes.";
+                }
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    await file.Data.CopyToAsync(ms);
+                    var a = ms.ToArray();
+                    var imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(a)}";
+                    ImagenesUrls.Add(imageDataUrl);
+                }
+            }
             status = DefaultStatus;
         }
     }

@@ -4,42 +4,22 @@ using Gallería.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Gallería.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20201024024936_AddTableImagen")]
+    partial class AddTableImagen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0-rc.1.20451.13");
-
-            modelBuilder.Entity("Gallería.Models.Familia", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int?>("Id_Gallo")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Id_TipoGallo")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id_Gallo");
-
-                    b.HasIndex("Id_TipoGallo");
-
-                    b.ToTable("Familia");
-                });
 
             modelBuilder.Entity("Gallería.Models.Gallo", b =>
                 {
@@ -54,12 +34,17 @@ namespace Gallería.Migrations
                     b.Property<DateTime>("FechaNacimiento")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("Id_TipoGallo")
+                        .HasColumnType("int");
+
                     b.Property<string>("Matricula")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Id_TipoGallo");
 
                     b.ToTable("Gallo");
                 });
@@ -301,17 +286,11 @@ namespace Gallería.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Gallería.Models.Familia", b =>
+            modelBuilder.Entity("Gallería.Models.Gallo", b =>
                 {
-                    b.HasOne("Gallería.Models.Gallo", "Gallo")
-                        .WithMany()
-                        .HasForeignKey("Id_Gallo");
-
                     b.HasOne("Gallería.Models.TipoGallo", "TipoGallo")
-                        .WithMany("Familias")
+                        .WithMany("Gallos")
                         .HasForeignKey("Id_TipoGallo");
-
-                    b.Navigation("Gallo");
 
                     b.Navigation("TipoGallo");
                 });
@@ -385,7 +364,7 @@ namespace Gallería.Migrations
 
             modelBuilder.Entity("Gallería.Models.TipoGallo", b =>
                 {
-                    b.Navigation("Familias");
+                    b.Navigation("Gallos");
                 });
 #pragma warning restore 612, 618
         }

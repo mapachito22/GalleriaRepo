@@ -17,6 +17,6 @@ namespace Gallería.Models
         [Required]
         public string Descripcion { get; set; }
 
-        public ICollection<Gallo> Gallos { get; set; }
+        public ICollection<Familia> Familias { get; set; }
     }
 }

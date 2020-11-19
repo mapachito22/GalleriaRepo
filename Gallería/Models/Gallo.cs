@@ -23,8 +23,6 @@ namespace Gallería.Models
         [Required]
         public DateTime FechaNacimiento { get; set; } = DateTime.Now;
 
-        [ForeignKey("TipoGallo")]
-        public int? Id_TipoGallo { get; set; }
-        public TipoGallo TipoGallo { get; set; }
+        public ICollection<Imagen> Imagens { get; set; }
     }
 }
