@@ -15,6 +15,7 @@ namespace Gallería.Models
         public int Id { get; set; }
 
         public string Alias { get; set; }
+        public string Notas { get; set; }
 
         [MaxLength(50)]
         [Required]
