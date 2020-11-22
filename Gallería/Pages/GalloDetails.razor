@@ -1,6 +1,7 @@
 ﻿@page "/galloDetails"
 @page "/galloDetails/{id:int}"
 @inject GalloService galloService
+@inject TipoGalloService tipoGalloService
 @inject NavigationManager NavigationManager
 @using BlazorInputFile
 
@@ -15,19 +16,47 @@
                 <input for="Alias" class="form-control" @bind="entity.Alias" />
             </div>
             <div class="form-group">
-                <label for="Matricula" class="control-label">Matrícula:</label>
-                <input for="Matricula" class="form-control" @bind="entity.Matricula" />
+                <label for="Id_TipoGallo" class="control-label">Tipo:</label>
+                <select class="form-control" @bind="entity.Id_TipoGallo">
+                    @if (tipoGallos?.Count > 0)
+                    {
+                        @foreach (var cnt in tipoGallos)
+                        {
+                            <option value="@cnt.Id">@cnt.Descripcion</option>
+                        }
+                    }
+                </select>
             </div>
-            <div class="form-group">
-                <label for="FechaNacimiento" class="control-label">Fecha Nacimiento:</label>
-                <input for="FechaNacimiento" type="date" class="form-control" @bind="entity.FechaNacimiento" />
-            </div>
-            <div class="form-group">
-                <label for="Notas" class="control-label">Notas:</label>
-                <textarea rows="5" for="Notas" type="text" class="form-control" @bind="entity.Notas" />
+                <div class="form-group">
+                    <label for="Matricula" class="control-label">Matrícula:</label>
+                    <input for="Matricula" class="form-control" @bind="entity.Matricula" />
+                </div>
+                <div class="form-group">
+                    <label for="FechaNacimiento" class="control-label">Fecha Nacimiento:</label>
+                    <input for="FechaNacimiento" type="date" class="form-control" @bind="entity.FechaNacimiento" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Padre:</label>
+                    <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchPadre" @bind-Value="padre">
+                        <SelectedTemplate Context="padre">@padre.Matricula - @padre.Alias</SelectedTemplate>
+                        <ResultTemplate Context="padre">@padre.Matricula - @padre.Alias</ResultTemplate>
+                    </Blazored.Typeahead.BlazoredTypeahead>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Madre:</label>
+                    <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchMadre" @bind-Value="madre">
+                        <SelectedTemplate Context="madre">
+                            @madre.Matricula - @madre.Alias
+                        </SelectedTemplate>
+                        <ResultTemplate Context="madre">@madre.Matricula - @madre.Alias </ResultTemplate>
+                    </Blazored.Typeahead.BlazoredTypeahead>
+                </div>
+                <div class="form-group">
+                    <label for="Notas" class="control-label">Notas:</label>
+                    <textarea rows="5" for="Notas" type="text" class="form-control" @bind="entity.Notas" />
+                </div>
             </div>
         </div>
-    </div>
 
     <br />
     
@@ -82,6 +111,10 @@
     [Parameter]
     public int id { get; set; }
     private Gallo entity = new Gallo();
+    private Gallo madre;
+    private Gallo padre;
+    private List<Gallo> gallos = new List<Gallo>();
+    private List<TipoGallo> tipoGallos = new List<TipoGallo>();
 
     [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
@@ -96,6 +129,16 @@
     {
         if (await galloService.Save(entity))
             NavigationManager.NavigateTo("GallosList");
+    }
+
+    private async Task<IEnumerable<Gallo>> SearchPadre(string searchText)
+    {
+        return await galloService.AllPadres(searchText);
+    }
+
+    private async Task<IEnumerable<Gallo>> SearchMadre(string search)
+    {
+        return await galloService.AllMadres(search);
     }
 
     protected void borrasImagenes()
@@ -122,6 +165,9 @@
 
         if (id > 0)
             entity = await galloService.Get(id);
+       
+        tipoGallos = await tipoGalloService.All();
+       
     }
     IList<String> ImagenesUrls = new List<String>();
 

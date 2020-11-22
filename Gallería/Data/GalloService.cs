@@ -24,6 +24,21 @@ namespace Gallería.Data
             return await gallosList;
         } 
         
+        public async Task<List<Gallo>> AllMadres(string searchText)
+        {
+            var gallosList = _context.Gallos.Where(x => x.Id_TipoGallo == 2 && 
+            (x.Matricula.ToLower().Contains(searchText.ToLower()) || x.Alias.ToLower().Contains(searchText.ToLower()))).ToListAsync();
+
+            return await gallosList;
+        } 
+        public async Task<List<Gallo>> AllPadres(string searchText)
+        {
+            var gallosList = _context.Gallos.Where(x => x.Id_TipoGallo == 1 && 
+            (x.Matricula.ToLower().Contains(searchText.ToLower()) || x.Alias.ToLower().Contains(searchText.ToLower()))).ToListAsync();
+
+            return await gallosList;
+        } 
+        
         //Insert
         public async Task<bool> Add(Gallo entity)
         {

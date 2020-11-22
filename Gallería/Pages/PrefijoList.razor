@@ -1,0 +1,75 @@
+﻿@page "/PrefijoList"
+@inject PrefijoService prefijoService
+@inject NavigationManager NavigationManager
+@this.message
+
+<div>
+    <h2>Prefijos</h2>
+    <input class="btn btn-success toRight" type="submit" value="Nuevo" @onclick="NavigateTo" />
+</div>
+
+<div class="row">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Descripcion</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tg in prefijos)
+            {
+                <tr>
+                    <td>@tg.Id</td>
+                    <td>@tg.Descripcion</td>
+                    <td>
+                        <a href="/prefijoDetails/@tg.Id">
+                            <btn class="btn btn-primary" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
+                                <span class="oi oi-pencil" />
+                            </btn>
+                        </a>
+                        <a href="/prefijoDelete/@tg.Id">
+                            <btn class="btn btn-danger" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
+                                <span class="oi oi-trash" />
+                            </btn>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code
+{
+    private List<Prefijo> prefijos = new List<Prefijo>();
+    private string message;
+
+    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            var returnUrl =
+                NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            NavigationManager.NavigateTo($"/identity/account/login?returnUrl={"~/" + returnUrl}");
+        }
+        try
+        {
+            prefijos = await prefijoService.All();
+        }
+        catch (Exception ex)
+        {
+            message = ex.Message;
+        }
+    }
+
+    private void NavigateTo()
+    {
+        NavigationManager.NavigateTo("PrefijoDetails");
+    }
+}

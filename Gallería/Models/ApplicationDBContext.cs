@@ -17,5 +17,6 @@ namespace Gallería.Models
         public DbSet<Imagen> Imagens { get; set; }
         public DbSet<TipoGallo> TipoGallos { get; set; }
         public DbSet<Familia> Familias { get; set; }
+        public DbSet<Prefijo> Prefijos { get; set; }
     }
 }

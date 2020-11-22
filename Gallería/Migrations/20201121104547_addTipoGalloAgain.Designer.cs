@@ -4,14 +4,16 @@ using Gallería.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Gallería.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20201121104547_addTipoGalloAgain")]
+    partial class addTipoGalloAgain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +56,7 @@ namespace Gallería.Migrations
                     b.Property<DateTime>("FechaNacimiento")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("Id_TipoGallo")
+                    b.Property<int>("Id_TipoGallo")
                         .HasColumnType("int");
 
                     b.Property<string>("Matricula")
@@ -91,21 +93,6 @@ namespace Gallería.Migrations
                     b.HasIndex("Id_Gallo");
 
                     b.ToTable("Imagen");
-                });
-
-            modelBuilder.Entity("Gallería.Models.Prefijo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Prefijo");
                 });
 
             modelBuilder.Entity("Gallería.Models.TipoGallo", b =>
@@ -343,7 +330,9 @@ namespace Gallería.Migrations
                 {
                     b.HasOne("Gallería.Models.TipoGallo", "TipoGallo")
                         .WithMany("Gallos")
-                        .HasForeignKey("Id_TipoGallo");
+                        .HasForeignKey("Id_TipoGallo")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("TipoGallo");
                 });

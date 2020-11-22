@@ -34,10 +34,12 @@ namespace Gallería
             services.AddSingleton<WeatherForecastService>();
             services.AddDbContext<ApplicationDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                    .AddEntityFrameworkStores<ApplicationDBContext>();
             
             services.AddScoped<GalloService>();
+            //services.AddScoped<FamiliaService>();
+            services.AddScoped<PrefijoService>();
             services.AddScoped<TipoGalloService>();
         }
 

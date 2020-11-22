@@ -5,39 +5,39 @@ using System.Threading.Tasks;
 
 namespace Gallería.Data
 {
-    public class TipoGalloService
+    public class PrefijoService
     {
         private readonly ApplicationDBContext _context;
 
-        public TipoGalloService(ApplicationDBContext context)
+        public PrefijoService(ApplicationDBContext context)
         {
             _context = context;
         }
 
         //Get All
-        public async Task<List<TipoGallo>> All()
+        public async Task<List<Prefijo>> All()
         {
-            var tipogallosList = _context.TipoGallos.ToListAsync();
+            var PrefijosList = _context.Prefijos.ToListAsync();
 
-            return await tipogallosList;
+            return await PrefijosList;
         }
 
         //Insert
-        public async Task<bool> Add(TipoGallo entity)
+        public async Task<bool> Add(Prefijo entity)
         {
-            _context.TipoGallos.Add(entity);
+            _context.Prefijos.Add(entity);
 
             return await _context.SaveChangesAsync() > 0;
         }
 
         //Get by Id
-        public async Task<TipoGallo> Get(int Id)
+        public async Task<Prefijo> Get(int Id)
         {
-            return await _context.TipoGallos.FindAsync(Id);
+            return await _context.Prefijos.FindAsync(Id);
         }
 
         //Update
-        public async Task<bool> Update(TipoGallo entity)
+        public async Task<bool> Update(Prefijo entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
 
@@ -47,13 +47,13 @@ namespace Gallería.Data
         //Delete
         public async Task<bool> Delete(int id)
         {
-            var entity = await _context.TipoGallos.FindAsync(id);
-            _context.TipoGallos.Remove(entity);
+            var entity = await _context.Prefijos.FindAsync(id);
+            _context.Prefijos.Remove(entity);
 
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> Save(TipoGallo entity)
+        public async Task<bool> Save(Prefijo entity)
         {
             if (entity.Id > 0)
                 return await Update(entity);
