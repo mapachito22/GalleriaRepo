@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BlazorInputFile;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Gallería.Models
@@ -12,9 +13,17 @@ namespace Gallería.Models
         [ForeignKey("Gallo")]
         public int Id_Gallo { get; set; }
         public Gallo Gallo { get; set; }
-
+                
         [MaxLength(50)] 
-        public string ruta { get; set; }
+        public string nombre { get; set; }
+
+        public byte[] imagen { get; set; }
+
+        [NotMapped]
+        public string data { get; set; }
+        
+        [NotMapped]
+        public IFileListEntry file { get; set; }
 
     }
 }

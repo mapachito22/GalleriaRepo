@@ -16,6 +16,7 @@ namespace Gallería.Data
         public GalloService(ApplicationDBContext context)
         {
             _context = context;
+            familiaService = new FamiliaService(context);
         }
         
         //Get All
@@ -90,7 +91,7 @@ namespace Gallería.Data
 
             var familias = _context.Familias.Where(x => x.Familiar == entity.Id).ToList();
             if(familias != null && familias.Count != 0)
-                result += await familiaService.Delete(familias);
+                await familiaService.Delete(familias);
 
             _context.Entry(entity).State = EntityState.Modified;
 

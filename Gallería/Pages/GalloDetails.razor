@@ -3,6 +3,7 @@
 @inject GalloService galloService
 @inject FamiliaService familiaService
 @inject TipoGalloService tipoGalloService
+@inject ImagenService imagenService
 @inject NavigationManager NavigationManager
 @using BlazorInputFile
 
@@ -28,74 +29,99 @@
                     }
                 </select>
             </div>
-                <div class="form-group">
-                    <label for="Matricula" class="control-label">Matrícula:</label>
-                    <input for="Matricula" class="form-control" @bind="entity.Matricula" />
-                </div>
-                <div class="form-group">
-                    <label for="FechaNacimiento" class="control-label">Fecha Nacimiento:</label>
-                    <input for="FechaNacimiento" type="date" class="form-control" @bind="entity.FechaNacimiento" />
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Padre:</label>
-                    <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchPadre" @bind-Value="padre">
-                        <SelectedTemplate Context="padre">@padre.Matricula - @padre.Alias</SelectedTemplate>
-                        <ResultTemplate Context="padre">@padre.Matricula - @padre.Alias</ResultTemplate>
-                    </Blazored.Typeahead.BlazoredTypeahead>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Madre:</label>
-                    <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchMadre" @bind-Value="madre">
-                        <SelectedTemplate Context="madre">
-                            @madre.Matricula - @madre.Alias
-                        </SelectedTemplate>
-                        <ResultTemplate Context="madre">@madre.Matricula - @madre.Alias </ResultTemplate>
-                    </Blazored.Typeahead.BlazoredTypeahead>
-                </div>
-                <div class="form-group">
-                    <label for="Notas" class="control-label">Notas:</label>
-                    <textarea rows="5" for="Notas" type="text" class="form-control" @bind="entity.Notas" />
-                </div>
+            <div class="form-group">
+                <label for="Matricula" class="control-label">Matrícula:</label>
+                <input for="Matricula" class="form-control" @bind="entity.Matricula" />
+            </div>
+            <div class="form-group">
+                <label for="FechaNacimiento" class="control-label">Fecha Nacimiento:</label>
+                <input for="FechaNacimiento" type="date" class="form-control" @bind="entity.FechaNacimiento" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Padre:</label>
+                <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchPadre" @bind-Value="padre">
+                    <SelectedTemplate Context="padre">@padre.Matricula - @padre.Alias</SelectedTemplate>
+                    <ResultTemplate Context="padre">@padre.Matricula - @padre.Alias</ResultTemplate>
+                </Blazored.Typeahead.BlazoredTypeahead>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Madre:</label>
+                <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchMadre" @bind-Value="madre">
+                    <SelectedTemplate Context="madre">
+                        @madre.Matricula - @madre.Alias
+                    </SelectedTemplate>
+                    <ResultTemplate Context="madre">@madre.Matricula - @madre.Alias </ResultTemplate>
+                </Blazored.Typeahead.BlazoredTypeahead>
+            </div>
+            <div class="form-group">
+                <label for="Notas" class="control-label">Notas:</label>
+                <textarea rows="5" for="Notas" type="text" class="form-control" @bind="entity.Notas" />
             </div>
         </div>
+    </div>
 
     <br />
-    
+
     <div>
         <div>
             <h1 class="DragAndDrop">Arrastra y suelta la imagen</h1>
             <p class="DragAndDrop">Puede arrastrar varias imagenes a la vez</p>
             <div>
                 <input class="btn btn-success" type="submit" value="Borrar" @onclick="borrasImagenes" />
+                @if (!string.IsNullOrEmpty(msgError))
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @msgError
+                    </div>
+                }
+
             </div>
-            </div>
+        </div>
         <div class="DragAndDrop drag-drop-zone">
             @if (ImagenesUrls.Count <= 0)
             {
-                <InputFile multiple OnChange="ViewFile" />
+                <InputFile multiple accept="image/png,image/gif,image/jpeg" OnChange="ViewFile" />
                 @status
             }
             else
             {
-                <div class="image-list"> 
+                <div class="image-list">
                     <table class="table table-bordered col-md-3">
                         <tr>
                             @foreach (var item in ImagenesUrls)
                             {
                                 <td>
-                                   <div class="row">
-                                       <div class="col-lg-12">
-                                           <img src="@item" class="img-fluid" />
-                                       </div>
-                                   </div>
-                            
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <img src="data:{@item.file.Type};base64,@item.data" class="img-fluid" />
+                                        </div>
+                                    </div>
+
                                 </td>
                             }
                         </tr>
                     </table>
                 </div>
+
             }
         </div>
+        @if (ImagenesUrls != null && ImagenesUrls.Count > 0)
+        {
+            <div class="col-12">
+                <ul>
+                    @foreach (var file in ImagenesUrls)
+                    {
+                        <li>
+                            @file.nombre
+                            <button class="btn btn-link text-danger p-0 pl-1" type="button"
+                                    @onclick="@(e => RemoveFile(file))">
+                                <small class="align-text-bottom">Remove</small>
+                            </button>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
     </div>
 
     <div class="row">
@@ -108,7 +134,7 @@
     </div>
 </EditForm>
 
-@code 
+@code
 {
     [Parameter]
     public int id { get; set; }
@@ -117,6 +143,9 @@
     private Gallo padre;
     private List<Gallo> gallos = new List<Gallo>();
     private List<TipoGallo> tipoGallos = new List<TipoGallo>();
+    List<string> acceptedFileTypes = new List<string>() { "image/png", "image/jpg", "image/jpeg", "image/gif" };
+    private List<IFileListEntry> selectedFiles = new List<IFileListEntry>();
+    private string msgError;
 
     [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
@@ -130,7 +159,10 @@
     protected async Task SaveGallo()
     {
         if (await galloService.Save(entity, padre, madre))
+        {
+            await imagenService.UploadAsync(ImagenesUrls);
             NavigationManager.NavigateTo("GallosList");
+        }
     }
 
     private async Task<IEnumerable<Gallo>> SearchPadre(string searchText)
@@ -175,7 +207,7 @@
             {
                 madre = await galloService.Get(fMadre.Id_Gallo ?? 0);
             }
-            
+
             if (fPadre != null && fMadre.Id_Gallo != null)
             {
                 padre = await galloService.Get(fPadre.Id_Gallo ?? 0);
@@ -187,7 +219,12 @@
 
     }
 
-    IList<String> ImagenesUrls = new List<String>();
+    private void RemoveFile(Imagen file)
+    {
+        ImagenesUrls.Remove(file);
+    }
+
+    List<Imagen> ImagenesUrls = new List<Imagen>();
 
     async Task ViewFile(IFileListEntry[] files)
     {
@@ -198,34 +235,45 @@
         else
         {
             status = "Loading...";
-            var format = "image/jpg";
             int conteo = 0;
 
             foreach (var file in files)
             {
-                if(conteo == 3)
+                if (conteo == 3)
                 {
                     conteo = 0;
                     return;
                 }
-
-                conteo++;
-                if (file.Size > MaxFileSize)
+                if (acceptedFileTypes.Contains(file.Type))
                 {
-                    status = $"That's too big. Max size: {MaxFileSize} bytes.";
+                    Imagen myImagen = new Imagen();
+                    myImagen.nombre = file.Name;
+                    myImagen.Id_Gallo = entity.Id;
+                    myImagen.file = file;
+                    msgError = null;
+                    conteo++;
+                    
+                    if (file.Size > MaxFileSize)
+                    {
+                        status = $"That's too big. Max size: {MaxFileSize} bytes.";
+                    }
+
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        await file.Data.CopyToAsync(ms);
+                        var a = ms.ToArray();
+                        var imageDataUrl = $"data:{file.Type};base64,{Convert.ToBase64String(a)}";
+                        myImagen.data = Convert.ToBase64String(a);
+
+                    }
+                    ImagenesUrls.Add(myImagen);
                 }
-
-                using (MemoryStream ms = new MemoryStream())
+                else
                 {
-                    await file.Data.CopyToAsync(ms);
-                    var type = file.Name.Split('.')[1];
-                    var a = ms.ToArray();
-                    var imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(a)}";
-                    ImagenesUrls.Add(imageDataUrl);
+                    msgError = "Formato de Imagen no valido";
                 }
             }
             status = DefaultStatus;
         }
     }
-
 }
