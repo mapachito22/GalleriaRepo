@@ -38,7 +38,7 @@ namespace Gallería
                    .AddEntityFrameworkStores<ApplicationDBContext>();
             
             services.AddScoped<GalloService>();
-            //services.AddScoped<FamiliaService>();
+            services.AddScoped<FamiliaService>();
             services.AddScoped<PrefijoService>();
             services.AddScoped<TipoGalloService>();
         }

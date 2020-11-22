@@ -1,6 +1,7 @@
 ﻿@page "/galloDetails"
 @page "/galloDetails/{id:int}"
 @inject GalloService galloService
+@inject FamiliaService familiaService
 @inject TipoGalloService tipoGalloService
 @inject NavigationManager NavigationManager
 @using BlazorInputFile
@@ -107,7 +108,8 @@
     </div>
 </EditForm>
 
-@code {
+@code 
+{
     [Parameter]
     public int id { get; set; }
     private Gallo entity = new Gallo();
@@ -127,7 +129,7 @@
 
     protected async Task SaveGallo()
     {
-        if (await galloService.Save(entity))
+        if (await galloService.Save(entity, padre, madre))
             NavigationManager.NavigateTo("GallosList");
     }
 
@@ -164,11 +166,27 @@
         }
 
         if (id > 0)
+        {
             entity = await galloService.Get(id);
-       
+            Familia fMadre = await familiaService.Get(entity.Id, 2);
+            Familia fPadre = await familiaService.Get(entity.Id, 1);
+
+            if (fMadre != null)
+            {
+                madre = await galloService.Get(fMadre.Familiar);
+            }
+            
+            if (fPadre != null)
+            {
+                padre = await galloService.Get(fPadre.Familiar);
+            }
+
+        }
+
         tipoGallos = await tipoGalloService.All();
-       
+
     }
+
     IList<String> ImagenesUrls = new List<String>();
 
     async Task ViewFile(IFileListEntry[] files)

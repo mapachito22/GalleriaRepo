@@ -12,14 +12,12 @@ namespace Gallería.Models
     {
         [Key]
         public int Id { get; set; }
-
-        [ForeignKey("TipoGallo")]
-        public int? Id_TipoGallo { get; set; }
-        public TipoGallo TipoGallo { get; set; }
-        
+                
         [ForeignKey("Gallo")]
         public int? Id_Gallo { get; set; }
         public Gallo Gallo { get; set; }
+
+        public int Familiar { get; set; }
 
     }
 }

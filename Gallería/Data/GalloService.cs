@@ -1,5 +1,6 @@
 ﻿using Gallería.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Update;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace Gallería.Data
     public class GalloService
     {
         private readonly ApplicationDBContext _context;
+        private FamiliaService familiaService;
 
         public GalloService(ApplicationDBContext context)
         {
@@ -31,6 +33,7 @@ namespace Gallería.Data
 
             return await gallosList;
         } 
+        
         public async Task<List<Gallo>> AllPadres(string searchText)
         {
             var gallosList = _context.Gallos.Where(x => x.Id_TipoGallo == 1 && 
@@ -40,11 +43,35 @@ namespace Gallería.Data
         } 
         
         //Insert
-        public async Task<bool> Add(Gallo entity)
+        public async Task<bool> Add(Gallo entity, Gallo padre, Gallo madre)
         {
-            _context.Gallos.Add(entity);            
+            Familia fPadre = new Familia();
+            Familia fMadre = new Familia();
             
-            return await _context.SaveChangesAsync() > 0;
+            _context.Gallos.Add(entity);
+            
+            var result = await _context.SaveChangesAsync();
+            
+            var familias = _context.Familias.Where(x => x.Familiar == entity.Id).ToList();
+            result += await familiaService.Delete(familias);
+            
+            if(padre != null)
+            {
+                fPadre.Gallo = padre;
+                fPadre.Familiar = entity.Id;
+                _context.Familias.Add(fPadre);
+            }
+
+            if (madre != null)
+            {
+                fMadre.Gallo = madre;
+                fMadre.Familiar = entity.Id;
+                _context.Familias.Add(fMadre);
+            }
+            
+            result += await _context.SaveChangesAsync();
+
+            return result > 0;
         }
     
         //Get by Id
@@ -54,11 +81,33 @@ namespace Gallería.Data
         }
         
         //Update
-        public async Task<bool> Update(Gallo entity)
+        public async Task<bool> Update(Gallo entity, Gallo padre, Gallo madre)
         {
+            Familia fPadre = new Familia();
+            Familia fMadre = new Familia();
+            int result = 0;
+
+            var familias = _context.Familias.Where(x => x.Familiar == entity.Id).ToList();
+            result += await familiaService.Delete(familias);
+
             _context.Entry(entity).State = EntityState.Modified;
 
-            return await _context.SaveChangesAsync() > 0;            
+            if (padre != null)
+            {
+                fPadre.Gallo = padre;
+                fPadre.Familiar = entity.Id;
+                _context.Familias.Add(fPadre);
+            }
+
+            if (madre != null)
+            {
+                fMadre.Gallo = madre;
+                fMadre.Familiar = entity.Id;
+                _context.Familias.Add(fMadre);
+            }
+
+            result += await _context.SaveChangesAsync();
+            return result > 0;
         }
         
         //Delete
@@ -70,12 +119,12 @@ namespace Gallería.Data
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> Save(Gallo entity)
+        public async Task<bool> Save(Gallo entity, Gallo padre, Gallo madre)
         {
             if (entity.Id > 0)
-                return await Update(entity);
+                return await Update(entity, padre, madre);
             else
-                return await Add(entity);
+                return await Add(entity, padre, madre);
         }
     }
 }
