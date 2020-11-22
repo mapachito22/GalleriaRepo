@@ -171,14 +171,14 @@
             Familia fMadre = await familiaService.Get(entity.Id, 2);
             Familia fPadre = await familiaService.Get(entity.Id, 1);
 
-            if (fMadre != null)
+            if (fMadre != null && fMadre.Id_Gallo != null)
             {
-                madre = await galloService.Get(fMadre.Familiar);
+                madre = await galloService.Get(fMadre.Id_Gallo ?? 0);
             }
             
-            if (fPadre != null)
+            if (fPadre != null && fMadre.Id_Gallo != null)
             {
-                padre = await galloService.Get(fPadre.Familiar);
+                padre = await galloService.Get(fPadre.Id_Gallo ?? 0);
             }
 
         }
@@ -218,6 +218,7 @@
                 using (MemoryStream ms = new MemoryStream())
                 {
                     await file.Data.CopyToAsync(ms);
+                    var type = file.Name.Split('.')[1];
                     var a = ms.ToArray();
                     var imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(a)}";
                     ImagenesUrls.Add(imageDataUrl);

@@ -4,14 +4,16 @@ using Gallería.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Gallería.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20201122052352_cambios2")]
+    partial class cambios2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,9 +34,14 @@ namespace Gallería.Migrations
                     b.Property<int?>("Id_Gallo")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TipoGalloId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Id_Gallo");
+
+                    b.HasIndex("TipoGalloId");
 
                     b.ToTable("Familia");
                 });
@@ -328,6 +335,10 @@ namespace Gallería.Migrations
                         .WithMany()
                         .HasForeignKey("Id_Gallo");
 
+                    b.HasOne("Gallería.Models.TipoGallo", null)
+                        .WithMany("Familias")
+                        .HasForeignKey("TipoGalloId");
+
                     b.Navigation("Gallo");
                 });
 
@@ -409,6 +420,8 @@ namespace Gallería.Migrations
 
             modelBuilder.Entity("Gallería.Models.TipoGallo", b =>
                 {
+                    b.Navigation("Familias");
+
                     b.Navigation("Gallos");
                 });
 #pragma warning restore 612, 618

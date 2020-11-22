@@ -33,8 +33,10 @@ namespace Gallería.Data
         //Get by Id
         public async Task<Familia> Get(int Id, int Id_Tipo)
         {
-            return await _context.Familias.Where
-                (x => x.Id_Gallo == Id && x.Gallo.Id_TipoGallo == Id_Tipo).FirstOrDefaultAsync();
+            var gallo = await _context.Familias.Where
+                (x => x.Familiar == Id && x.Gallo.Id_TipoGallo == Id_Tipo).FirstOrDefaultAsync();
+
+            return gallo;
         }
         
         //Update

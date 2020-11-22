@@ -53,7 +53,8 @@ namespace Gallería.Data
             var result = await _context.SaveChangesAsync();
             
             var familias = _context.Familias.Where(x => x.Familiar == entity.Id).ToList();
-            result += await familiaService.Delete(familias);
+            if(familias != null && familias.Count != 0)
+                result += await familiaService.Delete(familias);
             
             if(padre != null)
             {
@@ -88,7 +89,8 @@ namespace Gallería.Data
             int result = 0;
 
             var familias = _context.Familias.Where(x => x.Familiar == entity.Id).ToList();
-            result += await familiaService.Delete(familias);
+            if(familias != null && familias.Count != 0)
+                result += await familiaService.Delete(familias);
 
             _context.Entry(entity).State = EntityState.Modified;
 
