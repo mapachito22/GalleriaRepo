@@ -61,6 +61,12 @@
         </div>
     </div>
 
+    <div class="row">
+        <NavLink class="nav-link" href="Plaqueo" Match="NavLinkMatch.All">
+            <span class="i-vcard" aria-hidden="true"></span> Plaqueo
+        </NavLink>
+    </div>
+
     <br />
 
     <div>
@@ -137,7 +143,7 @@
 
 @code
 {
-        #region Propiedades
+    #region Propiedades
     [Parameter]
     public int id { get; set; }
     private Gallo entity = new Gallo();
@@ -155,9 +161,12 @@
     string status = DefaultStatus;
     string fileName;
     string fileTextContents;
+
+
     #endregion
 
     #region Metodos
+
     protected async Task SaveGallo()
     {
         if (!string.IsNullOrEmpty(entity.Matricula))
@@ -168,7 +177,7 @@
                 await imagenService.UploadAsync(ImagenesUrls, entity.Id);
                 NavigationManager.NavigateTo("GallosList");
             }
-        } 
+        }
     }
 
     private async Task<IEnumerable<Gallo>> SearchPadre(string searchText)

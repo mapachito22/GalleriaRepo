@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Gallería.Data;
 using Gallería.Models;
 using Microsoft.EntityFrameworkCore;
+using Blazored.Modal;
 
 namespace Gallería
 {
@@ -36,6 +37,7 @@ namespace Gallería
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                    .AddEntityFrameworkStores<ApplicationDBContext>();
+            services.AddBlazoredModal();
             
             services.AddScoped<GalloService>();
             services.AddScoped<FamiliaService>();
