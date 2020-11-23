@@ -136,6 +136,7 @@
 
 @code
 {
+    #region Propiedades
     [Parameter]
     public int id { get; set; }
     private Gallo entity = new Gallo();
@@ -146,16 +147,16 @@
     List<string> acceptedFileTypes = new List<string>() { "image/png", "image/jpg", "image/jpeg", "image/gif" };
     private List<IFileListEntry> selectedFiles = new List<IFileListEntry>();
     private string msgError;
-
+    List<Imagen> ImagenesUrls = new List<Imagen>();
     [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
-
     const string DefaultStatus = "Suelta un archivo de texto aquí para verlo o haz clic para elegir un archivo";
     const int MaxFileSize = 5 * 1024 * 1024; // 5MB
     string status = DefaultStatus;
-
     string fileName;
     string fileTextContents;
+    #endregion
 
+    #region Metodos
     protected async Task SaveGallo()
     {
         if (await galloService.Save(entity, padre, madre))
@@ -224,8 +225,6 @@
         ImagenesUrls.Remove(file);
     }
 
-    List<Imagen> ImagenesUrls = new List<Imagen>();
-
     async Task ViewFile(IFileListEntry[] files)
     {
         if (files.Count() <= 0)
@@ -252,7 +251,7 @@
                     myImagen.file = file;
                     msgError = null;
                     conteo++;
-                    
+
                     if (file.Size > MaxFileSize)
                     {
                         status = $"That's too big. Max size: {MaxFileSize} bytes.";
@@ -276,4 +275,5 @@
             status = DefaultStatus;
         }
     }
+    #endregion
 }

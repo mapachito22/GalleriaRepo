@@ -1,0 +1,58 @@
+﻿@page "/Plaqueo"
+@inject NavigationManager NavigationManager
+@inject PrefijoService prefijoService
+
+<h2>Plaqueo</h2>
+<EditForm Model="@entidad">
+    <div class="col-md-8">
+        <div class="form-group">
+            <label class="control-label">Padre:</label>
+            <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchPrefijos" @bind-Value="prefijo">
+                <SelectedTemplate Context="prefijo">@prefijo.Descripcion</SelectedTemplate>
+                <ResultTemplate Context="prefijo">@prefijo.Descripcion</ResultTemplate>
+            </Blazored.Typeahead.BlazoredTypeahead>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Desde:</label>
+            <input class="form-control" @bind="entidad.desde" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Hasta:</label>
+            <input class="form-control" @bind="entidad.hasta" />
+        </div>
+
+    </div>
+
+    <input class="btn btn-success" type="submit" value="Save" @onclick="@Plaquear" />
+</EditForm>
+
+    @code
+{
+        public Prefijo prefijo = new Prefijo();
+        public Plaquear entidad = new Plaquear();
+        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+
+        protected async Task Plaquear()
+        {
+            entidad.prefijo = prefijo.Descripcion;
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+
+            base.OnInitialized();
+            var user = (await AuthStat).User;
+            if (!user.Identity.IsAuthenticated)
+            {
+                var returnUrl =
+                    NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+                NavigationManager.NavigateTo($"/identity/account/login?returnUrl={"~/" + returnUrl}");
+            }
+        }
+
+        private async Task<IEnumerable<Prefijo>> SearchPrefijos(string searchText)
+        {
+            return await prefijoService.AllSearch(searchText);
+        }
+    }

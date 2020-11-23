@@ -13,7 +13,6 @@ namespace Gallería.Models
     {
         [Key]
         public int Id { get; set; }
-
         public string Alias { get; set; }
         public string Notas { get; set; }
 

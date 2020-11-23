@@ -23,6 +23,14 @@ namespace Gallería.Data
             return await PrefijosList;
         }
 
+        public async Task<List<Prefijo>> AllSearch(string searchText)
+        {
+            var prefijoList = _context.Prefijos
+                .Where(x => x.Descripcion.ToLower().Contains(searchText.ToLower())).ToListAsync();
+
+            return await prefijoList;
+        }
+
         //Insert
         public async Task<bool> Add(Prefijo entity)
         {
