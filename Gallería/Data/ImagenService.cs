@@ -18,7 +18,7 @@ namespace Gallería.Data
             _context = context;
         }
 
-        public async Task UploadAsync(List<Imagen> imagenes)
+        public async Task UploadAsync(List<Imagen> imagenes, int id)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace Gallería.Data
                     Imagen myImage = new Imagen();
                     myImage.imagen = getImagen(item.data);
                     myImage.nombre = item.nombre;
-                    myImage.Id_Gallo = item.Id_Gallo;
+                    myImage.Id_Gallo = id;
                     await Add(myImage);                    
                 }
             }

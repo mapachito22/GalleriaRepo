@@ -22,14 +22,14 @@ namespace Gallería.Data
         //Get All
         public async Task<List<Gallo>> All()
         {
-            var gallosList = _context.Gallos.ToListAsync();
+            var gallosList = _context.Gallos.Where(x => x.eliminado != true).ToListAsync();
 
             return await gallosList;
         } 
         
         public async Task<List<Gallo>> AllMadres(string searchText)
         {
-            var gallosList = _context.Gallos.Where(x => x.Id_TipoGallo == 2 && 
+            var gallosList = _context.Gallos.Where(x => x.eliminado != true && x.Id_TipoGallo == 2 && 
             (x.Matricula.ToLower().Contains(searchText.ToLower()) || x.Alias.ToLower().Contains(searchText.ToLower()))).ToListAsync();
 
             return await gallosList;
@@ -37,7 +37,7 @@ namespace Gallería.Data
         
         public async Task<List<Gallo>> AllPadres(string searchText)
         {
-            var gallosList = _context.Gallos.Where(x => x.Id_TipoGallo == 1 && 
+            var gallosList = _context.Gallos.Where(x => x.eliminado != true && x.Id_TipoGallo == 1 && 
             (x.Matricula.ToLower().Contains(searchText.ToLower()) || x.Alias.ToLower().Contains(searchText.ToLower()))).ToListAsync();
 
             return await gallosList;
@@ -74,6 +74,25 @@ namespace Gallería.Data
             result += await _context.SaveChangesAsync();
 
             return result > 0;
+        }
+
+        //Plaqueo
+        public async Task<bool> Plaquear(Plaquear plaqueo)
+        {
+            int desde = plaqueo.desde ?? 0;
+            int hasta = plaqueo.hasta ?? 0;
+            bool result = false;
+
+            while(hasta >= desde)
+            {
+                Gallo entidad = new Gallo();
+                entidad.FechaNacimiento = plaqueo.fechaNacimiento;
+                entidad.Matricula = (plaqueo.prefijo + " - " + desde);
+                desde++;
+
+                result = await Add(entidad, null, null);
+            }
+            return result;
         }
     
         //Get by Id
@@ -117,8 +136,9 @@ namespace Gallería.Data
         public async Task<bool> Delete(int id)
         {
             var entity = await _context.Gallos.FindAsync(id);
-            _context.Gallos.Remove(entity);
-
+            entity.eliminado = true;
+            //_context.Gallos.Remove(entity);
+            _context.Entry(entity).State = EntityState.Modified; 
             return await _context.SaveChangesAsync() > 0;
         }
 

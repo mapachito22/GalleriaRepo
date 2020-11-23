@@ -27,6 +27,8 @@ namespace Gallería.Models
         public int? Id_TipoGallo { get; set; }
         public TipoGallo TipoGallo { get; set; }
 
+        public bool? eliminado { get; set; }
+
         public ICollection<Imagen> Imagens { get; set; }
     }
 }

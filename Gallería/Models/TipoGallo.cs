@@ -15,6 +15,8 @@ namespace Gallería.Models
         [Required]
         public string Descripcion { get; set; }
 
+        public bool? eliminado { get; set; }
+
         public ICollection<Gallo> Gallos { get; set; }
     }
 }

@@ -1,12 +1,13 @@
 ﻿@page "/Plaqueo"
 @inject NavigationManager NavigationManager
 @inject PrefijoService prefijoService
+@inject GalloService galloService
 
 <h2>Plaqueo</h2>
 <EditForm Model="@entidad">
     <div class="col-md-8">
         <div class="form-group">
-            <label class="control-label">Padre:</label>
+            <label class="control-label">Prefijo:</label>
             <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchPrefijos" @bind-Value="prefijo">
                 <SelectedTemplate Context="prefijo">@prefijo.Descripcion</SelectedTemplate>
                 <ResultTemplate Context="prefijo">@prefijo.Descripcion</ResultTemplate>
@@ -14,17 +15,41 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label">Desde:</label>
-            <input class="form-control" @bind="entidad.desde" />
+            <label for="FechaNacimiento" class="control-label">Fecha Nacimiento:</label>
+            <input for="FechaNacimiento" type="date" required class="form-control" @bind="entidad.fechaNacimiento" />
         </div>
+
+        <div class="form-group">
+            <label class="control-label">Desde:</label>
+            <input class="form-control" type="number" @bind="entidad.desde" />
+        </div>
+
         <div class="form-group">
             <label class="control-label">Hasta:</label>
-            <input class="form-control" @bind="entidad.hasta" />
+            <input class="form-control" type="number" @bind="entidad.hasta" />
+            @if (!string.IsNullOrEmpty(msgError))
+            {
+                <div class="alert alert-danger" role="alert">
+                    @msgError
+                </div>
+            }
         </div>
+        <input class="btn btn-success" type="submit" value="Guardar" @onclick="@Plaquear" />
+        @if (!string.IsNullOrEmpty(msgExitoso))
+        {
+            <div class="alert alert-success" role="alert">
+                @msgExitoso
+            </div>
+        }
 
+        @if (!string.IsNullOrEmpty(msgNoExitoso))
+        {
+            <div class="alert alert-danger" role="alert">
+                @msgNoExitoso
+            </div>
+        }
     </div>
 
-    <input class="btn btn-success" type="submit" value="Save" @onclick="@Plaquear" />
 </EditForm>
 
     @code
@@ -32,15 +57,44 @@
         public Prefijo prefijo = new Prefijo();
         public Plaquear entidad = new Plaquear();
         [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+        private string msgError;
+        private string msgExitoso;
+        private string msgNoExitoso;
 
         protected async Task Plaquear()
         {
             entidad.prefijo = prefijo.Descripcion;
+            if (validarNum())
+            {
+                if(await galloService.Plaquear(entidad))
+                {
+                    msgExitoso = "El plaqueo fue exitoso";
+                    msgError = null;
+                    entidad = new Models.Plaquear();
+                    prefijo = new Prefijo();
+                }
+                else
+                {
+                    msgError = "No se pudo completar el plaque, revise los datos ingresados";
+                    msgExitoso = null;
+                }
+            }
+        }
+
+        private bool validarNum()
+        {
+            bool es = entidad.desde < entidad.hasta;
+
+            if (!es)
+                msgError = "Este campo debe ser mayor al campo Desde";
+            else
+                msgError = null;
+
+            return es;
         }
 
         protected override async Task OnInitializedAsync()
         {
-
             base.OnInitialized();
             var user = (await AuthStat).User;
             if (!user.Identity.IsAuthenticated)

@@ -4,14 +4,16 @@ using Gallería.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Gallería.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20201123034506_addEliminados")]
+    partial class addEliminados
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,7 +109,7 @@ namespace Gallería.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("eliminado")
+                    b.Property<bool>("eliminado")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -126,7 +128,7 @@ namespace Gallería.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("eliminado")
+                    b.Property<bool>("eliminado")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");

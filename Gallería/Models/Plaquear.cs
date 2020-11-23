@@ -10,5 +10,6 @@ namespace Gallería.Models
         public int? desde { get; set; }
         public int? hasta { get; set; }
         public string prefijo { get; set; }
+        public DateTime fechaNacimiento { get; set; }
     }
 }

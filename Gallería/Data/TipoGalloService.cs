@@ -1,6 +1,7 @@
 ﻿using Gallería.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Gallería.Data
@@ -17,7 +18,7 @@ namespace Gallería.Data
         //Get All
         public async Task<List<TipoGallo>> All()
         {
-            var tipogallosList = _context.TipoGallos.ToListAsync();
+            var tipogallosList = _context.TipoGallos.Where(x => x.eliminado != true).ToListAsync();
 
             return await tipogallosList;
         }
@@ -48,8 +49,9 @@ namespace Gallería.Data
         public async Task<bool> Delete(int id)
         {
             var entity = await _context.TipoGallos.FindAsync(id);
-            _context.TipoGallos.Remove(entity);
-
+            entity.eliminado = true;
+            //_context.Gallos.Remove(entity);
+            _context.Entry(entity).State = EntityState.Modified; 
             return await _context.SaveChangesAsync() > 0;
         }
 

@@ -18,7 +18,7 @@ namespace Gallería.Data
         //Get All
         public async Task<List<Prefijo>> All()
         {
-            var PrefijosList = _context.Prefijos.ToListAsync();
+            var PrefijosList = _context.Prefijos.Where(x => x.eliminado != true).ToListAsync();
 
             return await PrefijosList;
         }
@@ -26,7 +26,7 @@ namespace Gallería.Data
         public async Task<List<Prefijo>> AllSearch(string searchText)
         {
             var prefijoList = _context.Prefijos
-                .Where(x => x.Descripcion.ToLower().Contains(searchText.ToLower())).ToListAsync();
+                .Where(x => x.eliminado != true && x.Descripcion.ToLower().Contains(searchText.ToLower())).ToListAsync();
 
             return await prefijoList;
         }
@@ -57,8 +57,9 @@ namespace Gallería.Data
         public async Task<bool> Delete(int id)
         {
             var entity = await _context.Prefijos.FindAsync(id);
-            _context.Prefijos.Remove(entity);
-
+            entity.eliminado = true;
+            //_context.Gallos.Remove(entity);
+            _context.Entry(entity).State = EntityState.Modified;
             return await _context.SaveChangesAsync() > 0;
         }
 

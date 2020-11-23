@@ -10,9 +10,14 @@
 
 <h2>Gallo Detalles</h2>
 <EditForm Model="@this.entity">
-
     <div class="row">
         <div class="col-md-8">
+
+            <div class="form-group">
+                <label for="Matricula" class="control-label">Matrícula:</label>
+                <input for="Matricula" class="form-control" required @bind="entity.Matricula" />
+            </div>
+
             <div class="form-group">
                 <label for="Alias" class="control-label">Alias:</label>
                 <input for="Alias" class="form-control" @bind="entity.Alias" />
@@ -30,12 +35,8 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="Matricula" class="control-label">Matrícula:</label>
-                <input for="Matricula" class="form-control" @bind="entity.Matricula" />
-            </div>
-            <div class="form-group">
                 <label for="FechaNacimiento" class="control-label">Fecha Nacimiento:</label>
-                <input for="FechaNacimiento" type="date" class="form-control" @bind="entity.FechaNacimiento" />
+                <input for="FechaNacimiento" type="date" required class="form-control" @bind="entity.FechaNacimiento" />
             </div>
             <div class="form-group">
                 <label class="control-label">Padre:</label>
@@ -136,7 +137,7 @@
 
 @code
 {
-    #region Propiedades
+        #region Propiedades
     [Parameter]
     public int id { get; set; }
     private Gallo entity = new Gallo();
@@ -159,11 +160,15 @@
     #region Metodos
     protected async Task SaveGallo()
     {
-        if (await galloService.Save(entity, padre, madre))
+        if (!string.IsNullOrEmpty(entity.Matricula))
         {
-            await imagenService.UploadAsync(ImagenesUrls);
-            NavigationManager.NavigateTo("GallosList");
-        }
+
+            if (await galloService.Save(entity, padre, madre))
+            {
+                await imagenService.UploadAsync(ImagenesUrls, entity.Id);
+                NavigationManager.NavigateTo("GallosList");
+            }
+        } 
     }
 
     private async Task<IEnumerable<Gallo>> SearchPadre(string searchText)
