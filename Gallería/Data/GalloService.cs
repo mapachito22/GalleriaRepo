@@ -29,16 +29,34 @@ namespace Gallería.Data
         
         public async Task<List<Gallo>> AllMadres(string searchText)
         {
-            var gallosList = _context.Gallos.Where(x => x.eliminado != true && x.Id_TipoGallo == 2 && 
+            Task<List<Gallo>> gallosList;
+
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                gallosList = _context.Gallos.Where(x => x.eliminado != true && x.Id_TipoGallo == 2 &&
             (x.Matricula.ToLower().Contains(searchText.ToLower()) || x.Alias.ToLower().Contains(searchText.ToLower()))).ToListAsync();
+            }
+            else
+            {
+                gallosList = _context.Gallos.Where(x => x.eliminado != true && x.Id_TipoGallo == 2).ToListAsync();
+            }
 
             return await gallosList;
         } 
         
         public async Task<List<Gallo>> AllPadres(string searchText)
         {
-            var gallosList = _context.Gallos.Where(x => x.eliminado != true && x.Id_TipoGallo == 1 && 
+            Task<List<Gallo>> gallosList;
+            
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                gallosList = _context.Gallos.Where(x => x.eliminado != true && x.Id_TipoGallo == 1 &&
             (x.Matricula.ToLower().Contains(searchText.ToLower()) || x.Alias.ToLower().Contains(searchText.ToLower()))).ToListAsync();
+            }
+            else 
+            {
+                gallosList = _context.Gallos.Where(x => x.eliminado != true && x.Id_TipoGallo == 1 ).ToListAsync();
+            }
 
             return await gallosList;
         } 

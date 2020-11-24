@@ -1,31 +1,38 @@
 ﻿@page "/gallosList"
 @inject GalloService galloService
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@implements IDisposable
 @this.message
 
-    <div>
-        <h2>Gallos</h2>
-        <input class="btn btn-success toRight" type="submit" value="Nuevo" @onclick="NavigateTo" />
-    </div>
-
-    <div class="row">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Matricula</th>
-                    <th>Alias</th>
-                    <th>Fecha Nacimiento</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var gallo in gallos)
-                {
+<div>
+    <h2>Gallos</h2>
+</div>
+<br />
+<br />
+<input class="btn btn-success toRight" type="submit" value="Nuevo" @onclick="NavigateTo" />
+<div class="row">
+    <table id="example" class="table display" style="width:110%">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Matricula</th>
+                <th>Alias</th>
+                <th>Tipo</th>
+                <th>Fecha Nacimiento</th>
+                <th></th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var gallo in gallos)
+            {
                 <tr>
                     <td>@gallo.Id</td>
                     <td>@gallo.Matricula</td>
                     <td>@gallo.Alias</td>
+                    <td>@gallo.TipoGallo.Descripcion</td>
                     <td>@gallo.FechaNacimiento.ToShortDateString()</td>
                     <td>
                         <a href="/GalloDetails/@gallo.Id">
@@ -33,17 +40,19 @@
                                 <span class="oi oi-pencil" />
                             </btn>
                         </a>
+                    </td>
+                    <td>
                         <a href="/GalloDelete/@gallo.Id">
-                            <btn class="btn btn-danger" type="submit" value="Agregar"src="~/css/open-iconic/font/fonts/">
+                            <btn class="btn btn-danger" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
                                 <span class="oi oi-trash" />
                             </btn>
                         </a>
                     </td>
                 </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+            }
+        </tbody>
+    </table>
+</div>
 
 @code
 {
@@ -65,6 +74,7 @@
         try
         {
             gallos = await galloService.All();
+            //await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
         }
         catch (Exception ex)
         {
@@ -75,5 +85,21 @@
     private void NavigateTo()
     {
         NavigationManager.NavigateTo("GalloDetails");
+    }
+    bool primera = false;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+
+        if (!primera)
+        {
+            await JSRuntime.InvokeAsync<object>("TestDataTablesRemove", "#example");
+            primera = true;
+        }
+    }
+
+    void IDisposable.Dispose()
+    {
+        JSRuntime.InvokeAsync<object>("TestDataTablesRemove", "#example");
     }
 }
