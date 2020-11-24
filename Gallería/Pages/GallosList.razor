@@ -5,7 +5,9 @@
 
     <div>
         <h2>Gallos</h2>
-        <input class="btn btn-success toRight" type="submit" value="Nuevo" @onclick="NavigateTo" />
+        <a class="toRight" @onclick="NavigateTo">
+            <span class="i-plus" style="font-size: 25px; color: green;" />
+        </a>
     </div>
 
     <div class="row">
@@ -29,14 +31,10 @@
                     <td>@gallo.FechaNacimiento.ToShortDateString()</td>
                     <td>
                         <a href="/GalloDetails/@gallo.Id">
-                            <btn class="btn btn-primary" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
-                                <span class="oi oi-pencil" />
-                            </btn>
+                            <span class="i-pencil" style="font-size: 25px; color: skyblue;" />
                         </a>
-                        <a href="/GalloDelete/@gallo.Id">
-                            <btn class="btn btn-danger" type="submit" value="Agregar"src="~/css/open-iconic/font/fonts/">
-                                <span class="oi oi-trash" />
-                            </btn>
+                        <a href="/GalloDelete/@gallo.Id" >
+                            <span class="i-trash" style="font-size: 25px; color: firebrick;" />
                         </a>
                     </td>
                 </tr>

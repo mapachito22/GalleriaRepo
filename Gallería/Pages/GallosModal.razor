@@ -1,0 +1,145 @@
+﻿@page "/gallosModal"
+@page "/gallosModal/{id:int}/{key:int}"
+@inject GalloService galloService
+@inject FamiliaService familiaService
+@inject TipoGalloService tipoGalloService
+@inject ImagenService imagenService
+@inject NavigationManager NavigationManager
+@inject IModalService modal
+@using BlazorInputFile
+
+
+<h2>Gallo Detalles</h2>
+<EditForm Model="@this.entity">
+    <div class="row">
+        <div class="col-md-8">
+
+            <div class="form-group">
+                <label for="Matricula" class="control-label">Matrícula:</label>
+                <input for="Matricula" class="form-control" required @bind="entity.Matricula" />
+            </div>
+
+            <div class="form-group">
+                <label for="Alias" class="control-label">Alias:</label>
+                <input for="Alias" class="form-control" @bind="entity.Alias" />
+            </div>
+            <div class="form-group">
+                <label for="Id_TipoGallo" class="control-label">Tipo:</label>
+                <select class="form-control" @bind="entity.Id_TipoGallo">
+                    @if (tipoGallos?.Count > 0)
+                    {
+                        @foreach (var cnt in tipoGallos)
+                        {
+                            <option value="@cnt.Id">@cnt.Descripcion</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="FechaNacimiento" class="control-label">Fecha Nacimiento:</label>
+                <input for="FechaNacimiento" type="date" required class="form-control" @bind="entity.FechaNacimiento" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Padre:</label>
+                <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchPadre" @bind-Value="padre">
+                    <SelectedTemplate Context="padre">@padre.Matricula - @padre.Alias</SelectedTemplate>
+                    <ResultTemplate Context="padre">@padre.Matricula - @padre.Alias</ResultTemplate>
+                </Blazored.Typeahead.BlazoredTypeahead>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Madre:</label>
+                <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchMadre" @bind-Value="madre">
+                    <SelectedTemplate Context="madre">
+                        @madre.Matricula - @madre.Alias
+                    </SelectedTemplate>
+                    <ResultTemplate Context="madre">@madre.Matricula - @madre.Alias </ResultTemplate>
+                </Blazored.Typeahead.BlazoredTypeahead>
+
+            </div>
+            <div class="form-group">
+                <label for="Notas" class="control-label">Notas:</label>
+                <textarea rows="5" for="Notas" type="text" class="form-control" @bind="entity.Notas" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input class="btn btn-danger" type="button" value="Regresar" @onclick="@Cancel" />
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code
+{
+    #region Propiedades
+    [Parameter]
+    public int id { get; set; }
+
+    [Parameter]
+    public int key { get; set; }
+    private Gallo entity = new Gallo();
+    private Gallo madre;
+    private Gallo padre;
+    private List<Gallo> gallos = new List<Gallo>();
+    private List<TipoGallo> tipoGallos = new List<TipoGallo>();
+    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+
+    #endregion
+
+    #region Metodos
+
+
+    private async Task<IEnumerable<Gallo>> SearchPadre(string searchText)
+    {
+        return await galloService.AllPadres(searchText);
+    }
+
+    private async Task<IEnumerable<Gallo>> SearchMadre(string search)
+    {
+        return await galloService.AllMadres(search);
+    }
+
+
+    protected void Cancel()
+    {
+        NavigationManager.NavigateTo("GalloDetails/"+id);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            var returnUrl =
+                NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            NavigationManager.NavigateTo($"/identity/account/login?returnUrl={"~/" + returnUrl}");
+        }
+
+        if (key > 0)
+        {
+            entity = await galloService.Get(key);
+            Familia fMadre = await familiaService.Get(entity.Id, 2);
+            Familia fPadre = await familiaService.Get(entity.Id, 1);
+
+            if (fMadre != null && fMadre.Id_Gallo != null)
+            {
+                madre = await galloService.Get(fMadre.Id_Gallo ?? 0);
+            }
+
+            if (fPadre != null && fMadre.Id_Gallo != null)
+            {
+                padre = await galloService.Get(fPadre.Id_Gallo ?? 0);
+            }
+        }
+        tipoGallos = await tipoGalloService.All();
+    }
+    #endregion
+}
+
