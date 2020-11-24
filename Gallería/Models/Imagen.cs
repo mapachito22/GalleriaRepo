@@ -19,6 +19,8 @@ namespace Gallería.Models
 
         public byte[] imagen { get; set; }
 
+        public string type { get; set; }
+
         [NotMapped]
         public string data { get; set; }
         

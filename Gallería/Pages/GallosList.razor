@@ -13,13 +13,15 @@
     </div>
 
     <div class="row">
-        <table class="table">
+        <table id="example" class="table table-hover" style="width:110%">
             <thead>
                 <tr>
                     <th>Id</th>
                     <th>Matricula</th>
                     <th>Alias</th>
+                    <th>tipo</th>
                     <th>Fecha Nacimiento</th>
+                    <th></th>
                     <th></th>
                 </tr>
             </thead>
@@ -30,7 +32,14 @@
                     <td>@gallo.Id</td>
                     <td>@gallo.Matricula</td>
                     <td>@gallo.Alias</td>
-                    <td>@gallo.TipoGallo.Descripcion</td>
+                    @if (gallo.TipoGallo != null)
+                    {
+                        <td>@gallo.TipoGallo.Descripcion</td>
+                    }
+                    else
+                    {
+                        <td>Sin especificar</td>
+                    }
                     <td>@gallo.FechaNacimiento.ToShortDateString()</td>
                     <td>
                         <a href="/GalloDetails/@gallo.Id">
@@ -40,10 +49,8 @@
                     <td>
                         <a href="/GalloDelete/@gallo.Id">
                             <btn class="btn btn-danger" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
-                                <span class="oi oi-trash" />
+                                <span class="i-trash" style="font-size: 25px; color: firebrick;" />
                             </btn>
-                        <a href="/GalloDelete/@gallo.Id" >
-                            <span class="i-trash" style="font-size: 25px; color: firebrick;" />
                         </a>
                     </td>
                 </tr>
@@ -72,7 +79,13 @@
         try
         {
             gallos = await galloService.All();
-            //await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+            await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+
+            if (!primera_)
+            {
+                await JSRuntime.InvokeAsync<object>("TestDataTablesRemove", "#example");
+                primera_ = true;
+            }
         }
         catch (Exception ex)
         {
@@ -85,6 +98,7 @@
         NavigationManager.NavigateTo("GalloDetails");
     }
     bool primera = false;
+    bool primera_ = false;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");

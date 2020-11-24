@@ -1,5 +1,6 @@
 ﻿using BlazorInputFile;
 using Gallería.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +19,13 @@ namespace Gallería.Data
             _context = context;
         }
 
+        //Get All
+        public async Task<List<Imagen>> All(int idGallo)
+        {
+            var imagenList = await _context.Imagens.Where(x => x.Id_Gallo == idGallo).ToListAsync();
+            return imagenList;
+        }
+
         public async Task UploadAsync(List<Imagen> imagenes, int id)
         {
             try
@@ -31,8 +39,12 @@ namespace Gallería.Data
                         primera= true;
                     }
                     Imagen myImage = new Imagen();
-                    myImage.imagen = getImagen(item.data);
+                    if (!string.IsNullOrEmpty(item.data) && item.imagen == null)
+                        myImage.imagen = getImagen(item.data);
+                    else
+                        myImage.imagen = item.imagen;
                     myImage.nombre = item.nombre;
+                    myImage.type = item.type;
                     myImage.Id_Gallo = id;
                     await Add(myImage);                    
                 }
@@ -63,6 +75,7 @@ namespace Gallería.Data
 
             return await _context.SaveChangesAsync();
         }
+        
         private byte[] getImagen(string data)
         {
             byte[] bytes = null;
