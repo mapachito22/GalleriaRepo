@@ -5,29 +5,27 @@
 @implements IDisposable
 @this.message
 
-<div>
-    <h2>Gallos</h2>
-</div>
-<br />
-<br />
-<input class="btn btn-success toRight" type="submit" value="Nuevo" @onclick="NavigateTo" />
-<div class="row">
-    <table id="example" class="table display" style="width:110%">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Matricula</th>
-                <th>Alias</th>
-                <th>Tipo</th>
-                <th>Fecha Nacimiento</th>
-                <th></th>
-                <th>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var gallo in gallos)
-            {
+    <div>
+        <h2>Gallos</h2>
+        <a class="toRight" @onclick="NavigateTo">
+            <span class="i-plus" style="font-size: 25px; color: green;" />
+        </a>
+    </div>
+
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Matricula</th>
+                    <th>Alias</th>
+                    <th>Fecha Nacimiento</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var gallo in gallos)
+                {
                 <tr>
                     <td>@gallo.Id</td>
                     <td>@gallo.Matricula</td>
@@ -36,9 +34,7 @@
                     <td>@gallo.FechaNacimiento.ToShortDateString()</td>
                     <td>
                         <a href="/GalloDetails/@gallo.Id">
-                            <btn class="btn btn-primary" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
-                                <span class="oi oi-pencil" />
-                            </btn>
+                            <span class="i-pencil" style="font-size: 25px; color: skyblue;" />
                         </a>
                     </td>
                     <td>
@@ -46,6 +42,8 @@
                             <btn class="btn btn-danger" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
                                 <span class="oi oi-trash" />
                             </btn>
+                        <a href="/GalloDelete/@gallo.Id" >
+                            <span class="i-trash" style="font-size: 25px; color: firebrick;" />
                         </a>
                     </td>
                 </tr>

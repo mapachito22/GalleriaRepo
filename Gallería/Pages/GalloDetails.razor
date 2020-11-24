@@ -5,6 +5,7 @@
 @inject TipoGalloService tipoGalloService
 @inject ImagenService imagenService
 @inject NavigationManager NavigationManager
+@inject IModalService modal
 @using BlazorInputFile
 
 
@@ -49,6 +50,16 @@
                     <SelectedTemplate Context="padre">@padre.Matricula - @padre.Alias</SelectedTemplate>
                     <ResultTemplate Context="padre">@padre.Matricula - @padre.Alias</ResultTemplate>
                 </Blazored.Typeahead.BlazoredTypeahead>
+
+                @if (padre != null)
+                {
+
+                    <a @onclick="@(e => goToGallo(entity.Id,padre.Id))" class="toRight">
+                        <span class="i-info-circled" style="font-size: 25px; color: firebrick;" />
+                    </a>
+                }
+
+
             </div>
             <div class="form-group">
                 <label class="control-label">Madre:</label>
@@ -62,18 +73,23 @@
                     </SelectedTemplate>
                     <ResultTemplate Context="madre">@madre.Matricula - @madre.Alias </ResultTemplate>
                 </Blazored.Typeahead.BlazoredTypeahead>
+
+                @if (madre != null)
+                {
+
+                    <a @onclick="@(e => goToGallo(entity.Id,madre.Id))">
+                        <span class="i-info-circled" style="font-size: 25px; color: firebrick;" />
+                    </a>
+                }
+
+
+
             </div>
             <div class="form-group">
                 <label for="Notas" class="control-label">Notas:</label>
                 <textarea rows="5" for="Notas" type="text" class="form-control" @bind="entity.Notas" />
             </div>
         </div>
-    </div>
-
-    <div class="row">
-        <NavLink class="nav-link" href="Plaqueo" Match="NavLinkMatch.All">
-            <span class="i-vcard" aria-hidden="true"></span> Plaqueo
-        </NavLink>
     </div>
 
     <br />
@@ -170,11 +186,31 @@
     string status = DefaultStatus;
     string fileName;
     string fileTextContents;
+    [CascadingParameter] public IModalService Modal { get; set; }
 
 
     #endregion
 
     #region Metodos
+
+
+    void ShowMadre(int Id)
+    {
+        //var parameters = new ModalParameters();
+        //parameters.Add("Id", Id);
+        //Modal.Show("Edit Movie", typeof(GallosModal), parameters);
+
+
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(entity.Id), Id);
+
+        Modal.Show<GallosModal>("Gallo", parameters);
+    }
+
+    private void goToGallo(int Id, int IdParent)
+    {
+        NavigationManager.NavigateTo("GallosModal/" + Id + "/" + IdParent);
+    }
 
     protected async Task SaveGallo()
     {
