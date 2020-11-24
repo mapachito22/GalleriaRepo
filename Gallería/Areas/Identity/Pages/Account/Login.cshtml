@@ -34,12 +34,12 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Ingresar</button>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block" style="background-color: darkcyan;">Ingresar</button>
                     </div>
                     <div class="form-group formFooter">
                         <p>
-                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registrarse</a> |
-                            <a id="forgot-password" asp-page="./ForgotPassword">¿Olvidaste tu contraseña?</a>
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registrarse</a>
+                            @*|<a id="forgot-password" asp-page="./ForgotPassword">¿Olvidaste tu contraseña?</a>*@
                         </p>
                     </div>
                 </form>

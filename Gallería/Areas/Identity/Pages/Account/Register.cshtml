@@ -29,7 +29,9 @@
                     <input asp-for="Input.ConfirmPassword" class="form-control" />
                     <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                 </div>
-                <button type="submit" class="btn btn-primary">Register</button>
+                <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="btn btn-primary" 
+                   style="background-color: dimgrey;">Regresar</a>
+                <button type="submit" class="btn btn-primary" style="background-color: darkcyan;">Registrarse</button>
             </form>
         </div>
     </div>

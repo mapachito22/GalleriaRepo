@@ -34,7 +34,10 @@
                 </div>
             }
         </div>
-        <input class="btn btn-success" type="submit" value="Guardar" @onclick="@Plaquear" />
+        <a  @onclick="@Plaquear">
+            <span class="i-floppy" style="font-size: 25px; color: green;" />
+        </a>
+
         @if (!string.IsNullOrEmpty(msgExitoso))
         {
             <div class="alert alert-success" role="alert">
@@ -52,61 +55,61 @@
 
 </EditForm>
 
-    @code
+@code
 {
-        public Prefijo prefijo = new Prefijo();
-        public Plaquear entidad = new Plaquear();
-        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
-        private string msgError;
-        private string msgExitoso;
-        private string msgNoExitoso;
+    public Prefijo prefijo = new Prefijo();
+    public Plaquear entidad = new Plaquear();
+    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+    private string msgError;
+    private string msgExitoso;
+    private string msgNoExitoso;
 
-        protected async Task Plaquear()
+    protected async Task Plaquear()
+    {
+        entidad.prefijo = prefijo.Descripcion;
+        if (validarNum())
         {
-            entidad.prefijo = prefijo.Descripcion;
-            if (validarNum())
+            if (await galloService.Plaquear(entidad))
             {
-                if(await galloService.Plaquear(entidad))
-                {
-                    msgExitoso = "El plaqueo fue exitoso";
-                    msgError = null;
-                    entidad = new Models.Plaquear();
-                    prefijo = new Prefijo();
-                }
-                else
-                {
-                    msgError = "No se pudo completar el plaque, revise los datos ingresados";
-                    msgExitoso = null;
-                }
-            }
-        }
-
-        private bool validarNum()
-        {
-            bool es = entidad.desde < entidad.hasta;
-
-            if (!es)
-                msgError = "Este campo debe ser mayor al campo Desde";
-            else
+                msgExitoso = "El plaqueo fue exitoso";
                 msgError = null;
-
-            return es;
-        }
-
-        protected override async Task OnInitializedAsync()
-        {
-            base.OnInitialized();
-            var user = (await AuthStat).User;
-            if (!user.Identity.IsAuthenticated)
-            {
-                var returnUrl =
-                    NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-                NavigationManager.NavigateTo($"/identity/account/login?returnUrl={"~/" + returnUrl}");
+                entidad = new Models.Plaquear();
+                prefijo = new Prefijo();
             }
-        }
-
-        private async Task<IEnumerable<Prefijo>> SearchPrefijos(string searchText)
-        {
-            return await prefijoService.AllSearch(searchText);
+            else
+            {
+                msgError = "No se pudo completar el plaque, revise los datos ingresados";
+                msgExitoso = null;
+            }
         }
     }
+
+    private bool validarNum()
+    {
+        bool es = entidad.desde < entidad.hasta;
+
+        if (!es)
+            msgError = "Este campo debe ser mayor al campo Desde";
+        else
+            msgError = null;
+
+        return es;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            var returnUrl =
+                NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            NavigationManager.NavigateTo($"/identity/account/login?returnUrl={"~/" + returnUrl}");
+        }
+    }
+
+    private async Task<IEnumerable<Prefijo>> SearchPrefijos(string searchText)
+    {
+        return await prefijoService.AllSearch(searchText);
+    }
+}
