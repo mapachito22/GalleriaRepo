@@ -34,9 +34,9 @@
                 </div>
             }
         </div>
-        <a  @onclick="@Plaquear">
-            <span class="i-floppy" style="font-size: 25px; color: green;" />
-        </a>
+        <button class="btn btn-success" @onclick="@Plaquear">
+            Guardar
+        </button>
 
         @if (!string.IsNullOrEmpty(msgExitoso))
         {

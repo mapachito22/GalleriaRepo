@@ -42,12 +42,10 @@
             </div>
             <div class="form-group">
                 <label class="control-label">Padre:</label>
-                <Blazored.Typeahead.BlazoredTypeahead 
-                                                      SearchMethod="SearchPadre" 
-                                                      @bind-Value="padre" 
+                <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchPadre"
+                                                      @bind-Value="padre"
                                                       EnableDropDown="true"
-                                                      ShowDropDownOnFocus="true"
-                                                      >
+                                                      ShowDropDownOnFocus="true">
                     <SelectedTemplate Context="padre">@padre.Matricula - @padre.Alias</SelectedTemplate>
                     <ResultTemplate Context="padre">@padre.Matricula - @padre.Alias</ResultTemplate>
                 </Blazored.Typeahead.BlazoredTypeahead>
@@ -55,7 +53,7 @@
                 @if (padre != null)
                 {
 
-                    <a @onclick="@(e => goToGallo(entity.Id,padre.Id))" class="toRight">
+                    <a @onclick="@(e => goToGallo(entity.Id,padre.Id))">
                         <span class="i-info-circled" style="font-size: 25px; color: firebrick;" />
                     </a>
                 }
@@ -64,8 +62,7 @@
             </div>
             <div class="form-group">
                 <label class="control-label">Madre:</label>
-                <Blazored.Typeahead.BlazoredTypeahead 
-                                                      SearchMethod="SearchMadre"
+                <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchMadre"
                                                       @bind-Value="madre"
                                                       EnableDropDown="true"
                                                       ShowDropDownOnFocus="true">
@@ -100,7 +97,7 @@
             <h1 class="DragAndDrop">Arrastra y suelta la imagen</h1>
             <p class="DragAndDrop">Puede arrastrar varias imagenes a la vez</p>
             <div>
-                <input class="btn btn-success" type="submit" value="Borrar" @onclick="borrasImagenes" />
+
                 @if (!string.IsNullOrEmpty(msgError))
                 {
                     <div class="alert alert-danger" role="alert">
@@ -165,14 +162,17 @@
         }
     </div>
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <input class="btn btn-success" type="submit" value="Save" @onclick="@SaveGallo" />
-                <input class="btn btn-danger" type="button" value="Cancel" @onclick="@Cancel" />
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class=" d-flex justify-content-between align-items-center">
+                    <input class="btn btn-danger" type="button" value="Cancel" @onclick="@Cancel" />
+                    <input class="btn btn-success" type="submit" value="Save" @onclick="@SaveGallo" />
+                </div>
             </div>
         </div>
     </div>
+
 </EditForm>
 
 @code

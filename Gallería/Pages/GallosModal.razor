@@ -16,16 +16,16 @@
 
             <div class="form-group">
                 <label for="Matricula" class="control-label">Matrícula:</label>
-                <input for="Matricula" class="form-control" required @bind="entity.Matricula" />
+                <input for="Matricula" class="form-control" required @bind="entity.Matricula" disabled />
             </div>
 
             <div class="form-group">
                 <label for="Alias" class="control-label">Alias:</label>
-                <input for="Alias" class="form-control" @bind="entity.Alias" />
+                <input for="Alias" class="form-control" @bind="entity.Alias"disabled />
             </div>
             <div class="form-group">
                 <label for="Id_TipoGallo" class="control-label">Tipo:</label>
-                <select class="form-control" @bind="entity.Id_TipoGallo">
+                <select class="form-control" @bind="entity.Id_TipoGallo" disabled>
                     @if (tipoGallos?.Count > 0)
                     {
                         @foreach (var cnt in tipoGallos)
@@ -37,18 +37,18 @@
             </div>
             <div class="form-group">
                 <label for="FechaNacimiento" class="control-label">Fecha Nacimiento:</label>
-                <input for="FechaNacimiento" type="date" required class="form-control" @bind="entity.FechaNacimiento" />
+                <input for="FechaNacimiento" type="date" required class="form-control" @bind="entity.FechaNacimiento" disabled />
             </div>
             <div class="form-group">
                 <label class="control-label">Padre:</label>
-                <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchPadre" @bind-Value="padre">
+                <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchPadre" @bind-Value="padre" disabled>
                     <SelectedTemplate Context="padre">@padre.Matricula - @padre.Alias</SelectedTemplate>
                     <ResultTemplate Context="padre">@padre.Matricula - @padre.Alias</ResultTemplate>
                 </Blazored.Typeahead.BlazoredTypeahead>
             </div>
             <div class="form-group">
                 <label class="control-label">Madre:</label>
-                <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchMadre" @bind-Value="madre">
+                <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchMadre" @bind-Value="madre" disabled>
                     <SelectedTemplate Context="madre">
                         @madre.Matricula - @madre.Alias
                     </SelectedTemplate>
@@ -58,7 +58,7 @@
             </div>
             <div class="form-group">
                 <label for="Notas" class="control-label">Notas:</label>
-                <textarea rows="5" for="Notas" type="text" class="form-control" @bind="entity.Notas" />
+                <textarea rows="5" for="Notas" type="text" class="form-control" @bind="entity.Notas" disabled />
             </div>
         </div>
     </div>

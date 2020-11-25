@@ -5,9 +5,12 @@
 @inject IJSRuntime JSRuntime
 @this.message
 
-<div>
+<div class="row">
     <h2>Tipo Gallo</h2>
-    <input class="btn btn-success toRight" type="submit" value="Nuevo" @onclick="NavigateTo" />
+
+    <a @onclick="NavigateTo">
+        <span class="i-plus" style="font-size: 25px;color: green; padding: 10px;" />
+    </a>
 </div>
 
 <div class="row">
@@ -28,16 +31,12 @@
                 <td>@tg.Descripcion</td>
                 <td>
                     <a href="/TipoGalloDetails/@tg.Id">
-                        <btn class="btn btn-primary" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
-                            <span class="oi oi-pencil" />
-                        </btn>
+                        <span class="i-pencil" style="font-size: 25px; color: skyblue;" />
                     </a>
                 </td>
                 <td>
                     <a href="/TipoGalloDelete/@tg.Id">
-                        <btn class="btn btn-danger" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
-                            <span class="oi oi-trash" />
-                        </btn>
+                        <span class="i-trash" style="font-size: 25px; color: firebrick;" />
                     </a>
                 </td>
             </tr>

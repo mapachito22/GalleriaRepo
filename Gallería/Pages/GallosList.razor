@@ -5,29 +5,31 @@
 @implements IDisposable
 @this.message
 
-    <div>
-        <h2>Gallos</h2>
-        <a class="toRight" @onclick="NavigateTo">
-            <span class="i-plus" style="font-size: 25px; color: green;" />
-        </a>
-    </div>
 
-    <div class="row">
-        <table id="example" class="table table-hover" style="width:110%">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Matricula</th>
-                    <th>Alias</th>
-                    <th>tipo</th>
-                    <th>Fecha Nacimiento</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var gallo in gallos)
-                {
+<div class="row">
+    <h2>Gallos</h2>
+
+    <a @onclick="NavigateTo">
+        <span class="i-plus" style="font-size: 25px;color: green; padding: 10px;"/>
+    </a>
+</div>
+
+<div class="row">
+    <table id="example" class="table table-hover" style="width:110%">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Matricula</th>
+                <th>Alias</th>
+                <th>tipo</th>
+                <th>Fecha Nacimiento</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var gallo in gallos)
+            {
                 <tr>
                     <td>@gallo.Id</td>
                     <td>@gallo.Matricula</td>
@@ -48,9 +50,7 @@
                     </td>
                     <td>
                         <a href="/GalloDelete/@gallo.Id">
-                            <btn class="btn btn-danger" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
-                                <span class="i-trash" style="font-size: 25px; color: firebrick;" />
-                            </btn>
+                            <span class="i-trash" style="font-size: 25px; color: firebrick;" />
                         </a>
                     </td>
                 </tr>
