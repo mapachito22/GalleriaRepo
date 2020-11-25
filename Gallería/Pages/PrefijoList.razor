@@ -1,6 +1,8 @@
 ﻿@page "/PrefijoList"
 @inject PrefijoService prefijoService
 @inject NavigationManager NavigationManager
+@implements IDisposable
+@inject IJSRuntime JSRuntime
 @this.message
 
 <div>
@@ -9,11 +11,12 @@
 </div>
 
 <div class="row">
-    <table class="table">
+    <table id="tabPrefijo" class="table table-hover" style="width:110%">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Descripcion</th>
+                <th></th>
                 <th></th>
             </tr>
         </thead>
@@ -29,6 +32,8 @@
                                 <span class="oi oi-pencil" />
                             </btn>
                         </a>
+                    </td>
+                    <td>
                         <a href="/prefijoDelete/@tg.Id">
                             <btn class="btn btn-danger" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
                                 <span class="oi oi-trash" />
@@ -45,6 +50,8 @@
 {
     private List<Prefijo> prefijos = new List<Prefijo>();
     private string message;
+    bool primera = false;
+    bool primera_ = false;
 
     [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
@@ -61,6 +68,12 @@
         try
         {
             prefijos = await prefijoService.All();
+
+            if (!primera)
+            {
+                await JSRuntime.InvokeAsync<object>("TestDataTablesRemove", "#tabPrefijo");
+                primera = true;
+            }
         }
         catch (Exception ex)
         {
@@ -71,5 +84,22 @@
     private void NavigateTo()
     {
         NavigationManager.NavigateTo("PrefijoDetails");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#tabPrefijo");
+
+        if (!primera)
+        {
+            await JSRuntime.InvokeAsync<object>("TestDataTablesRemove", "#tabPrefijo");
+            primera = true;
+        }
+    }
+
+    void IDisposable.Dispose()
+    {
+        JSRuntime.InvokeAsync<object>("TestDataTablesRemove", "#tabPrefijo");
     }
 }

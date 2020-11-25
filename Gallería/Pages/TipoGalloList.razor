@@ -1,6 +1,8 @@
 ﻿@page "/tipogalloList"
 @inject TipoGalloService tipogalloService
 @inject NavigationManager NavigationManager
+@implements IDisposable
+@inject IJSRuntime JSRuntime
 @this.message
 
 <div>
@@ -9,33 +11,36 @@
 </div>
 
 <div class="row">
-    <table class="table">
+    <table id="tabTipoGallo" class="table table-hover" style="width:110%">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Descripcion</th>
+                <th></th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var tg in tipoGallos)
             {
-                <tr>
-                    <td>@tg.Id</td>
-                    <td>@tg.Descripcion</td>
-                    <td>
-                        <a href="/TipoGalloDetails/@tg.Id">
-                            <btn class="btn btn-primary" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
-                                <span class="oi oi-pencil" />
-                            </btn>
-                        </a>
-                        <a href="/TipoGalloDelete/@tg.Id">
-                            <btn class="btn btn-danger" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
-                                <span class="oi oi-trash" />
-                            </btn>
-                        </a>
-                    </td>
-                </tr>
+            <tr>
+                <td>@tg.Id</td>
+                <td>@tg.Descripcion</td>
+                <td>
+                    <a href="/TipoGalloDetails/@tg.Id">
+                        <btn class="btn btn-primary" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
+                            <span class="oi oi-pencil" />
+                        </btn>
+                    </a>
+                </td>
+                <td>
+                    <a href="/TipoGalloDelete/@tg.Id">
+                        <btn class="btn btn-danger" type="submit" value="Agregar" src="~/css/open-iconic/font/fonts/">
+                            <span class="oi oi-trash" />
+                        </btn>
+                    </a>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
@@ -45,6 +50,8 @@
 {
     private List<TipoGallo> tipoGallos = new List<TipoGallo>();
     private string message;
+    bool primera = false;
+    bool primera_ = false;
 
     [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
@@ -61,6 +68,15 @@
         try
         {
             tipoGallos = await tipogalloService.All();
+            await JSRuntime.InvokeAsync<object>("TestDataTablesRemove", "#tabTipoGallo");
+
+            await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#tabTipoGallo");
+
+            if (!primera_)
+            {
+                await JSRuntime.InvokeAsync<object>("TestDataTablesRemove", "#tabTipoGallo");
+                primera_ = true;
+            }
         }
         catch (Exception ex)
         {
@@ -71,5 +87,22 @@
     private void NavigateTo()
     {
         NavigationManager.NavigateTo("TipoGalloDetails");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#tabTipoGallo");
+
+        if (!primera)
+        {
+            await JSRuntime.InvokeAsync<object>("TestDataTablesRemove", "#tabTipoGallo");
+            primera = true;
+        }
+    }
+
+    void IDisposable.Dispose()
+    {
+        JSRuntime.InvokeAsync<object>("TestDataTablesRemove", "#tabTipoGallo");
     }
 }
