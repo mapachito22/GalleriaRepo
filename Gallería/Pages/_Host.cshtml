@@ -47,6 +47,40 @@
         function TestDataTablesAdd(table) {
             $(document).ready(function () {
                 $(table).DataTable();
+
+                function InicializarTraduccion() {
+                    var paginador = document.querySelector(`${table}_length`);
+                    var nodes = paginador.childNodes;
+                    var cnodes = nodes[0].childNodes;
+                    cnodes[0].textContent = cnodes[0].textContent.replace("Show", "Ver");
+                    cnodes[2].textContent = cnodes[2].textContent.replace("entries", "registros");
+
+                    cnodes[1].addEventListener("change", () => {
+                        InicializarTraduccion();
+                    });
+
+                    var filtro = document.querySelector(`${table}_filter`);
+                    var nodes = filtro.childNodes;
+                    var cnodes = nodes[0].childNodes;
+                    cnodes[0].textContent = cnodes[0].textContent.replace("Search", "Buscar");
+                    cnodes[1].addEventListener("input", () => {
+                        InicializarTraduccion();
+                    });
+
+                    var info = document.querySelector(`${table}_info`);
+                    info.innerText = info.innerText.replace("Showing", "Mostrando").replace("to", "a").replace("of", "de").replace("entries", "registros");
+
+                    var paginas = document.querySelector(`${table}_paginate`);
+                    var nodes = paginas.childNodes;
+                    nodes[0].textContent = nodes[0].textContent.replace("Previous", "Previo");
+                    nodes[2].textContent = nodes[2].textContent.replace("Next", "Siguiente");
+
+                    nodes[1].onclick = () => {
+                        InicializarTraduccion();
+                    }
+                }
+
+                InicializarTraduccion();
             });
         }
         function TestDataTablesRemove(table) {
