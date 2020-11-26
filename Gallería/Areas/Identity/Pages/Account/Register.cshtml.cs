@@ -22,7 +22,6 @@ namespace Gallería.Areas.Identity.Pages.Account
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -33,7 +32,6 @@ namespace Gallería.Areas.Identity.Pages.Account
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            _emailSender = emailSender;
         }
 
         [BindProperty]
@@ -45,10 +43,14 @@ namespace Gallería.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            //[Required]
+            //[EmailAddress]
+            //[Display(Name = "Email")]
+            //public string Email { get; set; }
+
             [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
-            public string Email { get; set; }
+            [Display(Name = "Usuario")]
+            public string UserName { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -74,11 +76,11 @@ namespace Gallería.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                var user = new IdentityUser { UserName = Input.UserName };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    _logger.LogInformation("Se ha creado un usuario nuevo");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -88,12 +90,12 @@ namespace Gallería.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("Login", new { email = Input.Email, returnUrl = returnUrl });
+                        return RedirectToPage("Login", new { userName = Input.UserName, returnUrl = returnUrl });
                     }
                     else
                     {

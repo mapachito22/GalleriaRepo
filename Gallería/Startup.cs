@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
@@ -33,10 +29,26 @@ namespace Gallería
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            services.AddDbContext<ApplicationDBContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                   .AddEntityFrameworkStores<ApplicationDBContext>();
+            services.AddDbContext<ApplicationDBContext>(options => {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            }
+            );
+            services.AddDefaultIdentity<IdentityUser>(options => 
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.User.RequireUniqueEmail = false;
+                
+            }).AddEntityFrameworkStores<ApplicationDBContext>();
+            
+            //services.AddIdentity<IdentityUser, IdentityRole>(options => {
+            //    options.Password.RequireDigit = false;
+            //})
+            //    .AddEntityFrameworkStores<ApplicationDBContext>()
+            //    .AddDefaultTokenProviders();
             services.AddBlazoredModal();
             
             services.AddScoped<GalloService>();

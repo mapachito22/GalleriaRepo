@@ -9,7 +9,7 @@
     <h2>Tipo Gallo</h2>
 
     <a @onclick="NavigateTo">
-        <span class="i-plus" style="font-size: 25px;color: green; padding: 10px;" />
+       @*<span class="i-plus" style="font-size: 25px;color: green; padding: 10px;" />*@
     </a>
 </div>
 
@@ -19,7 +19,6 @@
             <tr>
                 <th>Id</th>
                 <th>Descripcion</th>
-                <th></th>
                 <th></th>
             </tr>
         </thead>
@@ -32,11 +31,6 @@
                 <td>
                     <a href="/TipoGalloDetails/@tg.Id">
                         <span class="i-pencil" style="font-size: 25px; color: skyblue;" />
-                    </a>
-                </td>
-                <td>
-                    <a href="/TipoGalloDelete/@tg.Id">
-                        <span class="i-trash" style="font-size: 25px; color: firebrick;" />
                     </a>
                 </td>
             </tr>

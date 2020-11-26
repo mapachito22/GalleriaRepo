@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Gallería.Models
 {
-    public class ApplicationDBContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDBContext : IdentityDbContext<Usuario>
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options)
             : base(options)
