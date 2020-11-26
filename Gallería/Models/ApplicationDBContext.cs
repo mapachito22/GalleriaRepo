@@ -18,5 +18,6 @@ namespace Gallería.Models
         public DbSet<TipoGallo> TipoGallos { get; set; }
         public DbSet<Familia> Familias { get; set; }
         public DbSet<Prefijo> Prefijos { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
     }
 }

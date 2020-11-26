@@ -1,0 +1,123 @@
+﻿@page "/usuarioDetails"
+@page "/usuarioDetails/{id}"
+@inject UsuarioService usuarioService
+@inject NavigationManager NavigationManager
+
+<h2>Usuario Detalles</h2>
+<EditForm Model="@entity" autocomplete="on">
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="UserName" class="control-label">Usuario:</label>
+                <input for="UserName" required autocomplete="off" class="form-control" @bind="entity.UserName" />
+            </div>
+            <div class="form-group">
+                <label for="Nombre" class="control-label">Nombre:</label>
+                <input for="Nombre" autocomplete="off" class="form-control" @bind="entity.Nombre" />
+            </div>
+            <div class="form-group">
+                <label for="Ap_Paterno" class="control-label">Apellido Paterno:</label>
+                <input for="Ap_Paterno" autocomplete="off" class="form-control" @bind="entity.Ap_Paterno" />
+            </div>
+            <div class="form-group" autocomplete="off">
+                <label for="Ap_Materno" class="control-label">Apellido Materno:</label>
+                <input for="Ap_Materno" autocomplete="off" class="form-control" @bind="entity.Ap_Materno" />
+            </div>
+            @if (string.IsNullOrEmpty(id))
+            {
+                <div class="form-group">
+                    <label for="pass" class="control-label">Contraseña:</label>
+                    <input for="pass" autocomplete="off" type="password" class="form-control" @bind="entity.pass" />
+                </div>
+                <div class="form-group">
+                    <label for="confPass" class="control-label">Confirmar contraseña:</label>
+                    <input for="confPass" autocomplete="off" type="password" class="form-control" @bind="entity.confPass" />
+                </div>
+            }
+        </div>
+    </div>
+    @if (!string.IsNullOrEmpty(message))
+    {
+        if (error)
+        {
+            <div class="alert alert-danger" role="alert">
+                @message
+            </div>
+        }
+        else
+        {
+            <div class="alert-success" role="alert">
+                @message
+            </div>
+        }
+
+    }
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input class="btn btn-danger" type="button" value="Cancel" @onclick="@Cancel" />
+                <input class="btn btn-success" type="submit" value="Save" @onclick="@SaveUsuario" />
+
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+    private Usuario entity = new Usuario();
+    private string message { get; set; }
+    bool error = true;
+    bool nuevo = true;
+    
+    protected async Task SaveUsuario()
+    {
+        message = null;
+        if ((entity.pass ?? "").Length < 6 || (entity.confPass ?? "").Length < 6)
+            message = "La contraseña debe tener al menos 6 dígitos";
+        else if (entity.pass != entity.confPass)
+            message = "Las contraseñas no coinciden";
+        else if (string.IsNullOrEmpty(entity.UserName))
+            message = "El nombre de usuario es obligatorio";
+
+        if (string.IsNullOrEmpty(message))
+        {
+            if (!string.IsNullOrEmpty(id))
+                nuevo = false;
+            if (await usuarioService.Save(entity, nuevo))
+            {
+                //NavigationManager.NavigateTo("UsuariosList");
+                error = false;
+                message = "Usuario agregado correctamente";
+                entity = new Usuario();
+                nuevo = false;
+            }
+        }
+    }
+
+    protected void Cancel()
+    {
+        NavigationManager.NavigateTo("UsuariosList");
+    }
+
+    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            var returnUrl =
+                NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            NavigationManager.NavigateTo($"/identity/account/login?returnUrl={"~/" + returnUrl}");
+        }
+
+        if (!string.IsNullOrEmpty(id))
+            entity = await usuarioService.Get(id);
+    }
+
+}
+

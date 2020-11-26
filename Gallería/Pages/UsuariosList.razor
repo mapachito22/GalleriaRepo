@@ -1,0 +1,108 @@
+﻿@page "/usuariosList"
+@inject UsuarioService usuarioService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+@this.message
+
+
+<div class="row">
+    <h2>Usuarios</h2>
+
+    <a @onclick="NavigateTo">
+        <span class="i-plus" style="font-size: 25px;color: green; padding: 10px;"/>
+    </a>
+</div>
+
+<div class="row">
+    <table id="example" class="table table-hover" style="width:110%">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Nombre</th>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in usuarios)
+            {
+                <tr>
+                    <td>@usuario.UserName</td>
+                    <td>@usuario.Nombre</td>
+                    <td>@usuario.Ap_Paterno</td>
+                    <td>@usuario.Ap_Materno</td>                    
+                    <td>
+                        <a href="/usuarioDetails/@usuario.Id">
+                            <span class="i-pencil" style="font-size: 25px; color: skyblue;" />
+                        </a>
+                    </td>
+                    <td>
+                        <a href="/usuarioDelete/@usuario.Id">
+                            <span class="i-trash" style="font-size: 25px; color: firebrick;" />
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code
+{
+    private List<Usuario> usuarios = new List<Usuario>();
+    private string message;
+
+    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            var returnUrl =
+                NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            NavigationManager.NavigateTo($"/identity/account/login?returnUrl={"~/" + returnUrl}");
+        }
+        try
+        {
+            usuarios = await usuarioService.All();
+            await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+
+            if (!primera_)
+            {
+                await JSRuntime.InvokeAsync<object>("TestDataTablesRemove", "#example");
+                primera_ = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            message = ex.Message;
+        }
+    }
+
+    private void NavigateTo()
+    {
+        NavigationManager.NavigateTo("usuarioDetails");
+    }
+    bool primera = false;
+    bool primera_ = false;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+
+        if (!primera)
+        {
+            await JSRuntime.InvokeAsync<object>("TestDataTablesRemove", "#example");
+            primera = true;
+        }
+    }
+
+    void IDisposable.Dispose()
+    {
+        JSRuntime.InvokeAsync<object>("TestDataTablesRemove", "#example");
+    }
+}

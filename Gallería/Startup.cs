@@ -33,7 +33,7 @@ namespace Gallería
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             }
             );
-            services.AddDefaultIdentity<IdentityUser>(options => 
+            services.AddDefaultIdentity<Usuario>(options => 
             {
                 options.SignIn.RequireConfirmedAccount = false;
                 options.Password.RequiredLength = 6;
@@ -56,6 +56,7 @@ namespace Gallería
             services.AddScoped<PrefijoService>();
             services.AddScoped<TipoGalloService>();
             services.AddScoped<ImagenService>();
+            services.AddScoped<UsuarioService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

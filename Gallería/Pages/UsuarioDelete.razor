@@ -1,0 +1,66 @@
+﻿@page "/usuarioDelete/{id:int}"
+@inject UsuarioService usuarioService
+@inject NavigationManager NavigationManager
+
+<h2>Borrar Usuario</h2>
+<br />
+<h3>¿Esta seguro de eliminar este Usuario?</h3>
+<EditForm Model="@entity">
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="Id" class="control-label">Id:</label>
+                <input for="Id" disabled class="form-control" @bind="entity.Id" />
+            </div>
+            <div class="form-group">
+                <label for="Descripcion" class="control-label">Descripcion:</label>
+                <input for="Descripcion" disabled class="form-control" @bind="entity.UserName" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input class="btn btn-primary" type="button" value="Cancelar" @onclick="@Cancel" />
+                <input class="btn btn-danger" type="button" value="Borrar" @onclick="@BorrarUsuario" />
+
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private Usuario entity = new Usuario();
+
+    protected async Task BorrarUsuario()
+    {
+        //if (await usuarioService.Delete(id))
+        //    NavigationManager.NavigateTo("UsuarioList");
+    }
+
+    protected void Cancel()
+    {
+        NavigationManager.NavigateTo("UsuarioList");
+    }
+
+    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            var returnUrl =
+                NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            NavigationManager.NavigateTo($"/identity/account/login?returnUrl={"~/" + returnUrl}");
+        }
+
+        //if (id > 0)
+        //    entity = await usuarioService.Get(id);
+    }
+}
