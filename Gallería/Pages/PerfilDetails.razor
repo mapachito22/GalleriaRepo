@@ -1,9 +1,8 @@
-﻿@page "/usuarioDetails"
-@page "/usuarioDetails/{id}"
+﻿@page "/perfilDetails"
 @inject UsuarioService usuarioService
 @inject NavigationManager NavigationManager
 
-<h2>Usuario Detalles</h2>
+<h2>Perfil</h2>
 <EditForm Model="@entity" autocomplete="off">
     <div style="position: fixed; top: 100%">
         <input type="text" />
@@ -27,17 +26,14 @@
                 <label for="Ap_Materno" class="control-label">Apellido Materno:</label>
                 <input id="Ap_Materno" class="form-control" @bind="entity.Ap_Materno" />
             </div>
-            @if (string.IsNullOrEmpty(id))
-            {
-                <div class="form-group">
-                    <label for="pass" class="control-label">Contraseña:</label>
-                    <input id="pass" type="password" class="form-control" @bind="entity.pass" />
-                </div>
-                <div class="form-group">
-                    <label for="confPass" class="control-label">Confirmar contraseña:</label>
-                    <input id="confPass" type="password" class="form-control" @bind="entity.confPass" />
-                </div>
-            }
+            <div class="form-group">
+                <label for="pass" class="control-label">Contraseña:</label>
+                <input id="pass" type="password" class="form-control" @bind="entity.pass" />
+            </div>
+            <div class="form-group">
+                <label for="confPass" class="control-label">Confirmar contraseña:</label>
+                <input id="confPass" type="password" class="form-control" @bind="entity.confPass" />
+            </div>
         </div>
     </div>
     @if (!string.IsNullOrEmpty(message))
@@ -61,7 +57,6 @@
             <div class="form-group">
                 <input class="btn btn-danger" type="button" value="Cancel" @onclick="@Cancel" />
                 <input class="btn btn-success" type="submit" value="Save" @onclick="@SaveUsuario" />
-
             </div>
         </div>
     </div>
@@ -74,7 +69,7 @@
     private string message { get; set; }
     bool error = true;
     bool nuevo = true;
-    
+
     protected async Task SaveUsuario()
     {
         message = null;
@@ -87,15 +82,15 @@
 
         if (string.IsNullOrEmpty(message))
         {
-            if (!string.IsNullOrEmpty(id))
-                nuevo = false;
-            if (await usuarioService.Save(entity, nuevo))
+
+            nuevo = false;
+            if (await usuarioService.UpdateCurrent(entity))
             {
-                //NavigationManager.NavigateTo("UsuariosList");
                 error = false;
-                message = "Usuario agregado correctamente";
+                message = "Usuario actualizado correctamente";
                 entity = new Usuario();
                 nuevo = false;
+                NavigationManager.NavigateTo("");
             }
         }
     }
@@ -117,9 +112,12 @@
                 NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
             NavigationManager.NavigateTo($"/identity/account/login?returnUrl={"~/" + returnUrl}");
         }
-
-        if (!string.IsNullOrEmpty(id))
-            entity = await usuarioService.Get(id);
+        else
+        {
+            entity = await usuarioService.GetByName(user.Identity.Name);
+            entity.pass = "";
+            entity.confPass = "";
+        }
     }
 
 }

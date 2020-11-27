@@ -12,10 +12,14 @@ namespace Gallería.Models
         public string Nombre { get; set; }
         public string Ap_Paterno { get; set; }
         public string Ap_Materno { get; set; }
-        public bool? Admin { get; set; }
         [NotMapped]
         public string pass { get; set; }
         [NotMapped]
         public string confPass { get; set; }
+        public Usuario()
+        {
+            this.UserName = " ";
+            this.pass = this.confPass = "";
+        }
     }
 }

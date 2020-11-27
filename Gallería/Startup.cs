@@ -29,10 +29,8 @@ namespace Gallería
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            services.AddDbContext<ApplicationDBContext>(options => {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            }
-            );
+            services.AddDbContext<ApplicationDBContext>(options => 
+            { options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")); });
             services.AddDefaultIdentity<Usuario>(options => 
             {
                 options.SignIn.RequireConfirmedAccount = false;
@@ -42,7 +40,9 @@ namespace Gallería
                 options.Password.RequireLowercase = false;
                 options.User.RequireUniqueEmail = false;
                 
-            }).AddEntityFrameworkStores<ApplicationDBContext>();
+            })
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDBContext>();
             
             //services.AddIdentity<IdentityUser, IdentityRole>(options => {
             //    options.Password.RequireDigit = false;

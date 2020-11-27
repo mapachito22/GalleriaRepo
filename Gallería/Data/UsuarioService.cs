@@ -62,11 +62,26 @@ namespace Gallería.Data
             return await _context.Usuarios.FindAsync(Id);
         }
 
+        public async Task<Usuario> GetByName(string name)
+        {
+            return await _context.Usuarios.Where(x => x.UserName == name).FirstOrDefaultAsync();
+        }
+
         //Update
         public async Task<bool> Update(Usuario entity)
         {
             Usuario usuarioActual = await Get(entity.Id);
             entity.PasswordHash = entity.PasswordHash != usuarioActual.PasswordHash ? HashPassword(entity.pass) : entity.PasswordHash;
+            entity.NormalizedUserName = entity.UserName.ToUpper();
+            _context.Entry(entity).State = EntityState.Modified;
+
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> UpdateCurrent(Usuario entity)
+        {
+            Usuario usuarioActual = await Get(entity.Id);
+            entity.PasswordHash = HashPassword(entity.pass);
             entity.NormalizedUserName = entity.UserName.ToUpper();
             _context.Entry(entity).State = EntityState.Modified;
 
