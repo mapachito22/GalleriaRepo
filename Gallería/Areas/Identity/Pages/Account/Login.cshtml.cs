@@ -56,6 +56,7 @@ namespace Gallería.Areas.Identity.Pages.Account
 
             [Display(Name = "Recuérdame")]
             public bool RememberMe { get; set; }
+
         }
 
         public async Task OnGetAsync(string returnUrl = null)

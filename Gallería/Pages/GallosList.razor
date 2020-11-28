@@ -7,14 +7,16 @@
 
 
 <div class="row">
-    <h2>Gallos</h2>
+    <div class="col">
+        <h2 style="color: #c41c1c; padding-inline-start: 15px;">Gallos</h2>
+    </div>
 
-    <a @onclick="NavigateTo">
-        <span class="i-plus" style="font-size: 25px;color: green; padding: 10px;"/>
-    </a>
+    <div class="col text-right">
+        <button class="btn btn-save" style="background-color: #da1f1f; border-color: #da1f1f; color: white;" @onclick="NavigateTo">Agregar</button>
+    </div>
+
 </div>
-
-<div class="row">
+<div class="col-md-11" style="padding-block-start: 20px;">
     <table id="example" class="table table-hover" style="width:110%">
         <thead>
             <tr>

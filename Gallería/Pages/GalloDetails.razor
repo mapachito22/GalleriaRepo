@@ -9,84 +9,81 @@
 @using BlazorInputFile
 
 
-<h2>Gallo Detalles</h2>
+<h2 style="color: #c41c1c; padding-inline-start: 15px;">Gallo Detalles</h2>
 <EditForm Model="@this.entity">
-    <div class="row">
-        <div class="col-md-8">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="Matricula" class="control-label">Matrícula:</label>
+            <input for="Matricula" class="form-control" required @bind="entity.Matricula" />
+        </div>
 
-            <div class="form-group">
-                <label for="Matricula" class="control-label">Matrícula:</label>
-                <input for="Matricula" class="form-control" required @bind="entity.Matricula" />
-            </div>
-
-            <div class="form-group">
-                <label for="Alias" class="control-label">Alias:</label>
-                <input for="Alias" class="form-control" @bind="entity.Alias" />
-            </div>
-            <div class="form-group">
-                <label for="Id_TipoGallo" class="control-label">Tipo:</label>
-                <select class="form-control" required @bind="entity.Id_TipoGallo">
-                    @if (tipoGallos?.Count > 0)
+        <div class="form-group">
+            <label for="Alias" class="control-label">Alias:</label>
+            <input for="Alias" class="form-control" @bind="entity.Alias" />
+        </div>
+        <div class="form-group">
+            <label for="Id_TipoGallo" class="control-label">Tipo:</label>
+            <select class="form-control" required @bind="entity.Id_TipoGallo">
+                @if (tipoGallos?.Count > 0)
+                {
+                    <option value="" disabled selected>--Click para ver opciones</option>
+                    @foreach (var cnt in tipoGallos)
                     {
-                        <option value="" disabled selected>--Click para ver opciones</option>
-                        @foreach (var cnt in tipoGallos)
-                        {
-                            <option value="@cnt.Id">@cnt.Descripcion</option>
-                        }
+                        <option value="@cnt.Id">@cnt.Descripcion</option>
                     }
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="FechaNacimiento" class="control-label">Fecha Nacimiento:</label>
-                <input for="FechaNacimiento" type="date" required class="form-control" @bind="entity.FechaNacimiento" />
-            </div>
-            <div class="form-group">
-                <label class="control-label">Padre:</label>
-                <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchPadre"
-                                                      @bind-Value="padre"
-                                                      EnableDropDown="true"
-                                                      ShowDropDownOnFocus="true">
-                    <SelectedTemplate Context="padre">@padre.Matricula - @padre.Alias</SelectedTemplate>
-                    <ResultTemplate Context="padre">@padre.Matricula - @padre.Alias</ResultTemplate>
-                </Blazored.Typeahead.BlazoredTypeahead>
-
-                @if (padre != null)
-                {
-
-                    <a @onclick="@(e => goToGallo(entity.Id,padre.Id))">
-                        <span class="i-info-circled" style="font-size: 25px; color: firebrick;" />
-                    </a>
                 }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="FechaNacimiento" class="control-label">Fecha Nacimiento:</label>
+            <input for="FechaNacimiento" type="date" required class="form-control" @bind="entity.FechaNacimiento" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Padre:</label>
+            <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchPadre"
+                                                  @bind-Value="padre"
+                                                  EnableDropDown="true"
+                                                  ShowDropDownOnFocus="true">
+                <SelectedTemplate Context="padre">@padre.Matricula - @padre.Alias</SelectedTemplate>
+                <ResultTemplate Context="padre">@padre.Matricula - @padre.Alias</ResultTemplate>
+            </Blazored.Typeahead.BlazoredTypeahead>
+
+            @if (padre != null)
+            {
+
+                <a @onclick="@(e => goToGallo(entity.Id,padre.Id))">
+                    <span class="i-info-circled" style="font-size: 25px; color: firebrick;" />
+                </a>
+            }
 
 
-            </div>
-            <div class="form-group">
-                <label class="control-label">Madre:</label>
-                <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchMadre"
-                                                      @bind-Value="madre"
-                                                      EnableDropDown="true"
-                                                      ShowDropDownOnFocus="true">
-                    <SelectedTemplate Context="madre">
-                        @madre.Matricula - @madre.Alias
-                    </SelectedTemplate>
-                    <ResultTemplate Context="madre">@madre.Matricula - @madre.Alias </ResultTemplate>
-                </Blazored.Typeahead.BlazoredTypeahead>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Madre:</label>
+            <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchMadre"
+                                                  @bind-Value="madre"
+                                                  EnableDropDown="true"
+                                                  ShowDropDownOnFocus="true">
+                <SelectedTemplate Context="madre">
+                    @madre.Matricula - @madre.Alias
+                </SelectedTemplate>
+                <ResultTemplate Context="madre">@madre.Matricula - @madre.Alias </ResultTemplate>
+            </Blazored.Typeahead.BlazoredTypeahead>
 
-                @if (madre != null)
-                {
+            @if (madre != null)
+            {
 
-                    <a @onclick="@(e => goToGallo(entity.Id,madre.Id))">
-                        <span class="i-info-circled" style="font-size: 25px; color: firebrick;" />
-                    </a>
-                }
+                <a @onclick="@(e => goToGallo(entity.Id,madre.Id))">
+                    <span class="i-info-circled" style="font-size: 25px; color: firebrick;" />
+                </a>
+            }
 
 
 
-            </div>
-            <div class="form-group">
-                <label for="Notas" class="control-label">Notas:</label>
-                <textarea rows="5" for="Notas" type="text" class="form-control" @bind="entity.Notas" />
-            </div>
+        </div>
+        <div class="form-group">
+            <label for="Notas" class="control-label">Notas:</label>
+            <textarea rows="5" for="Notas" type="text" class="form-control" @bind="entity.Notas" />
         </div>
     </div>
 
@@ -161,18 +158,10 @@
             </div>
         }
     </div>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class=" d-flex justify-content-between align-items-center">
-                    <input class="btn btn-danger" type="button" value="Cancel" @onclick="@Cancel" />
-                    <input class="btn btn-success" type="submit" value="Save" @onclick="@SaveGallo" />
-                </div>
-            </div>
-        </div>
+    <div class="col text-center">
+        <input class="btn btn-default" style="background-color: darkgray; color: white;" type="submit" value="Cancelar" @onclick="@Cancel" />
+        <input class="btn btn-success" style="background-color: #da1f1f; border-color: #da1f1f; color: white;" type="submit" value="Guardar" @onclick="@SaveGallo" />
     </div>
-
 </EditForm>
 
 @code

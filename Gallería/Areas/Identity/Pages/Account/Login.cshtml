@@ -12,36 +12,40 @@
         <div id="Principal" class="wrapper fadeInDown">
             <div id="formContent">
                 <form id="account" method="post">
-                    <h4>Iniciar Sesión</h4>
+                    @*<h4>Iniciar Sesión</h4>*@
+                    <div>
+                        <img id="logoLogin" style="width: 250px;"  src="/iconos/logo3.png" />
+                    </div>
                     <hr />
-                    <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="form-group">
-                        <label asp-for="Input.UserName"></label>
-                        <input asp-for="Input.UserName" class="form-control" />
-                        <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                        <label class="lbl-first">Usuario</label>
+                        <input asp-for="Input.UserName" type="text" class="form-control form-controlLogin" />
+                        <br />
+                        <span asp-validation-for="Input.UserName"  class="lbl-first"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Input.Password">Contraseña</label>
-                        <input asp-for="Input.Password" class="form-control" />
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        <label class="lbl-first">Contraseña</label>
+                        <input asp-for="Input.Password" type="password" class="form-control form-controlLogin" />
+                        <br />
+                        <span asp-validation-for="Input.Password"  class="lbl-first"></span>
                     </div>
                     <div class="form-group">
                         <div class="checkbox">
-                            <label asp-for="Input.RememberMe">
+                            <label class="lbl-first" asp-for="Input.RememberMe">
                                 <input asp-for="Input.RememberMe" />
                                 Recordarme
                             </label>
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-lg btn-block" style="background-color: darkcyan;">Ingresar</button>
+                        <button type="submit" class="btn btn-First btn-lg btn-block">Ingresar</button>
                     </div>
-                    <div class="form-group formFooter">
-                        <p>
-                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registrarse</a>
-                            |<a id="forgot-password" asp-page="./ForgotPassword">¿Olvidaste tu contraseña?</a>
-                        </p>
-                    </div>
+                    @*<div class="form-group formFooter">
+            <p>
+                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registrarse</a>
+                |<a id="forgot-password" asp-page="./ForgotPassword">¿Olvidaste tu contraseña?</a>
+            </p>
+        </div>*@
                 </form>
             </div>
         </div>

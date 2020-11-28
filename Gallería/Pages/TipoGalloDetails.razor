@@ -3,24 +3,19 @@
 @inject TipoGalloService tipogalloService
 @inject NavigationManager NavigationManager
 
-<h2>Gallo Detalles</h2>
+<h2 style="color: #c41c1c; padding-inline-start: 15px;">Tipo Gallo Detalles</h2>
+
 <EditForm Model="@entity">
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="form-group">
-                <label for="Descripcion" class="control-label">Descripcion:</label>
-                <input for="Descripcion" class="form-control" @bind="entity.Descripcion" />
-            </div>
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="Descripcion" class="control-label">Descripcion:</label>
+            <input for="Descripcion" class="form-control" @bind="entity.Descripcion" />
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <input class="btn btn-danger" type="button" value="Cancel" @onclick="@Cancel" />
-                <input class="btn btn-success" type="submit" value="Save" @onclick="@SaveTipoGallo" />
 
-            </div>
+        <div class="col text-center">
+            <input class="btn btn-danger" style="background-color: darkgray; border-color: darkgray; color: white;" type="submit" value="Cancelar" @onclick="@Cancel" />
+            <input class="btn btn-success"style="background-color: #da1f1f; border-color: #da1f1f; color: white;" type="submit" value="Guardar" @onclick="@SaveTipoGallo" />
         </div>
     </div>
 

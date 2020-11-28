@@ -7,7 +7,7 @@ html {
 body {
     font-family: "Poppins", sans-serif;
     height: 100vh;
-    background-image: linear-gradient(171deg, #17a2b8, #00000021);
+    background-image: linear-gradient(0deg, #fff, #fff);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -50,7 +50,7 @@ h2 {
 #formContent {
     -webkit-border-radius: 10px 10px 10px 10px;
     border-radius: 10px 10px 10px 10px;
-    background: #fff;
+    background: #da1f1f;
     padding: 30px;
     width: 90%;
     max-width: 450px;
@@ -119,8 +119,12 @@ input[type=button], input[type=submit], input[type=reset] {
         transform: scale(0.95);
     }
 
-input[type=text] {
-    background-color: #f6f6f6;
+input:Focus {
+    Background-color: yellow;
+}
+
+/*input[type=text] {
+    background-color: #dee2e6;
     border: none;
     color: #0d0d0d;
     padding: 15px 32px;
@@ -138,17 +142,38 @@ input[type=text] {
     transition: all 0.5s ease-in-out;
     -webkit-border-radius: 5px 5px 5px 5px;
     border-radius: 5px 5px 5px 5px;
+}*/
+
+.form-controlLogin {
+    background-color: #f8f9fa !important;
+    color: black !important;
 }
 
-    input[type=text]:focus {
+.form-control:active, .form-control:focus {
+    border-color: #b10707 !important;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgb(233 102 102 / 60%);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgb(233 102 102 / 60%)
+}
+
+.li-div{
+    border-bottom:groove;
+}
+
+
+    /*input[type=text]:focus {
         background-color: #fff;
         border-bottom: 2px solid #5fbae9;
     }
 
     input[type=text]:placeholder {
         color: #cccccc;
-    }
+    }*/
 
+#headerLogo {
+    width: 150px;
+    margin: 20px auto;
+}
 
 
 /* ANIMATIONS */
@@ -289,4 +314,26 @@ input[type=text] {
 
 #icon {
     width: 60%;
+}
+
+.btn-First {
+    background-color: #fff;
+    border-color: #ff0018;
+    color: black;
+}
+
+.lbl-first {
+    font-size: 18px;
+    color: white;
+}
+
+.lbl-title {
+    color: #c41c1c;
+    padding-inline-start: 15px;
+}
+
+.btn-save {
+    background-color: #da1f1f;
+    border-color: #da1f1f;
+    color:white;
 }

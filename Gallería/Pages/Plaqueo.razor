@@ -3,9 +3,9 @@
 @inject PrefijoService prefijoService
 @inject GalloService galloService
 
-<h2>Plaqueo</h2>
+<h2 style="color: #c41c1c; padding-inline-start: 15px;">Plaqueo</h2>
 <EditForm Model="@entidad">
-    <div class="col-md-8">
+    <div class="col-md-12">
         <div class="form-group">
             <label class="control-label">Prefijo:</label>
             <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchPrefijos" @bind-Value="prefijo">
@@ -21,12 +21,12 @@
 
         <div class="form-group">
             <label class="control-label">Desde:</label>
-            <input class="form-control" type="number" @bind="entidad.desde" />
+            <input class="form-control" type="number" min="1" @bind="entidad.desde" />
         </div>
 
         <div class="form-group">
             <label class="control-label">Hasta:</label>
-            <input class="form-control" type="number" @bind="entidad.hasta" />
+            <input class="form-control" type="number" min="1" @bind="entidad.hasta" />
             @if (!string.IsNullOrEmpty(msgError))
             {
                 <div class="alert alert-danger" role="alert">
@@ -34,9 +34,11 @@
                 </div>
             }
         </div>
-        <button class="btn btn-success" @onclick="@Plaquear">
-            Guardar
-        </button>
+        <div class="col text-center" style="padding:5px">
+            <button class="btn btn-success" style="background-color: #da1f1f; border-color: #da1f1f; color: white;" @onclick="@Plaquear">
+                Guardar
+            </button>
+        </div>
 
         @if (!string.IsNullOrEmpty(msgExitoso))
         {

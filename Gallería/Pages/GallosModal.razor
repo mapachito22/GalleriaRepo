@@ -11,65 +11,64 @@
 
 <h2>Gallo Detalles</h2>
 <EditForm Model="@this.entity">
-    <div class="row">
-        <div class="col-md-8">
+    <div class="col-md-12">
 
-            <div class="form-group">
-                <label for="Matricula" class="control-label">Matrícula:</label>
-                <input for="Matricula" class="form-control" required @bind="entity.Matricula" disabled />
-            </div>
+        <div class="form-group">
+            <label for="Matricula" class="control-label">Matrícula:</label>
+            <input for="Matricula" class="form-control" required @bind="entity.Matricula" disabled />
+        </div>
 
-            <div class="form-group">
-                <label for="Alias" class="control-label">Alias:</label>
-                <input for="Alias" class="form-control" @bind="entity.Alias"disabled />
-            </div>
-            <div class="form-group">
-                <label for="Id_TipoGallo" class="control-label">Tipo:</label>
-                <select class="form-control" @bind="entity.Id_TipoGallo" disabled>
-                    @if (tipoGallos?.Count > 0)
+        <div class="form-group">
+            <label for="Alias" class="control-label">Alias:</label>
+            <input for="Alias" class="form-control" @bind="entity.Alias" disabled />
+        </div>
+        <div class="form-group">
+            <label for="Id_TipoGallo" class="control-label">Tipo:</label>
+            <select class="form-control" @bind="entity.Id_TipoGallo" disabled>
+                @if (tipoGallos?.Count > 0)
+                {
+                    @foreach (var cnt in tipoGallos)
                     {
-                        @foreach (var cnt in tipoGallos)
-                        {
-                            <option value="@cnt.Id">@cnt.Descripcion</option>
-                        }
+                        <option value="@cnt.Id">@cnt.Descripcion</option>
                     }
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="FechaNacimiento" class="control-label">Fecha Nacimiento:</label>
-                <input for="FechaNacimiento" type="date" required class="form-control" @bind="entity.FechaNacimiento" disabled />
-            </div>
-            <div class="form-group">
-                <label class="control-label">Padre:</label>
-                <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchPadre" @bind-Value="padre" disabled>
-                    <SelectedTemplate Context="padre">@padre.Matricula - @padre.Alias</SelectedTemplate>
-                    <ResultTemplate Context="padre">@padre.Matricula - @padre.Alias</ResultTemplate>
-                </Blazored.Typeahead.BlazoredTypeahead>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Madre:</label>
-                <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchMadre" @bind-Value="madre" disabled>
-                    <SelectedTemplate Context="madre">
-                        @madre.Matricula - @madre.Alias
-                    </SelectedTemplate>
-                    <ResultTemplate Context="madre">@madre.Matricula - @madre.Alias </ResultTemplate>
-                </Blazored.Typeahead.BlazoredTypeahead>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="FechaNacimiento" class="control-label">Fecha Nacimiento:</label>
+            <input for="FechaNacimiento" type="date" required class="form-control" @bind="entity.FechaNacimiento" disabled />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Padre:</label>
+            <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchPadre" @bind-Value="padre" disabled>
+                <SelectedTemplate Context="padre">@padre.Matricula - @padre.Alias</SelectedTemplate>
+                <ResultTemplate Context="padre">@padre.Matricula - @padre.Alias</ResultTemplate>
+            </Blazored.Typeahead.BlazoredTypeahead>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Madre:</label>
+            <Blazored.Typeahead.BlazoredTypeahead SearchMethod="SearchMadre" @bind-Value="madre" disabled>
+                <SelectedTemplate Context="madre">
+                    @madre.Matricula - @madre.Alias
+                </SelectedTemplate>
+                <ResultTemplate Context="madre">@madre.Matricula - @madre.Alias </ResultTemplate>
+            </Blazored.Typeahead.BlazoredTypeahead>
 
-            </div>
-            <div class="form-group">
-                <label for="Notas" class="control-label">Notas:</label>
-                <textarea rows="5" for="Notas" type="text" class="form-control" @bind="entity.Notas" disabled />
-            </div>
+        </div>
+        <div class="form-group">
+            <label for="Notas" class="control-label">Notas:</label>
+            <textarea rows="5" for="Notas" type="text" class="form-control" @bind="entity.Notas" disabled />
+        </div>
+
+        <div class="col text-center">
+            <input class="btn btn-danger" style="background-color: darkgray; border-color: darkgray; color: white;" type="submit" value="Regresar" @onclick="@Cancel" />
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <input class="btn btn-danger" type="button" value="Regresar" @onclick="@Cancel" />
-            </div>
-        </div>
-    </div>
+        
+
+            
+
 </EditForm>
 
 @code

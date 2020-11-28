@@ -2,12 +2,8 @@
 @inject UsuarioService usuarioService
 @inject NavigationManager NavigationManager
 
-<h2>Borrar Usuario</h2>
-<br />
-<h3>¿Esta seguro de eliminar este Usuario?</h3>
+<h3 style="color: #c41c1c; padding-inline-start: 15px;">¿Esta seguro de eliminar este Usuario?</h3>
 <EditForm Model="@entity">
-
-    <div class="row">
         <div class="col-md-8">
             <div class="form-group">
                 <label for="Id" class="control-label">Id:</label>
@@ -17,18 +13,13 @@
                 <label for="Descripcion" class="control-label">Descripcion:</label>
                 <input for="Descripcion" disabled class="form-control" @bind="entity.UserName" />
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <input class="btn btn-primary" type="button" value="Cancelar" @onclick="@Cancel" />
-                <input class="btn btn-danger" type="button" value="Borrar" @onclick="@BorrarUsuario" />
+
+            <div class="col text-center">
+                <input class="btn btn-primary" style="background-color: darkgray; border-color: darkgray; color: white;" type="submit" value="Cancelar" @onclick="@Cancel" />
+                <input class="btn btn-danger" style="background-color: #da1f1f; border-color: #da1f1f; color: white;" type="submit" value="Borrar" @onclick="@BorrarUsuario" />
 
             </div>
         </div>
-    </div>
-
 </EditForm>
 
 @code {

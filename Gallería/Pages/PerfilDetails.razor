@@ -2,62 +2,53 @@
 @inject UsuarioService usuarioService
 @inject NavigationManager NavigationManager
 
-<h2>Perfil</h2>
+<h2 style="color: #c41c1c; padding-inline-start: 15px;">Perfil</h2>
 <EditForm Model="@entity" autocomplete="off">
-    <div style="position: fixed; top: 100%">
-        <input type="text" />
-        <input type="password" />
-    </div>
-    <div class="row">
-        <div class="col-md-8">
-            <div class="form-group">
-                <label for="uname" class="control-label">Usuario:</label>
-                <input id="uname" required class="form-control" @bind="entity.UserName" />
-            </div>
-            <div class="form-group">
-                <label for="Nombre" class="control-label">Nombre:</label>
-                <input id="Nombre" class="form-control" @bind="entity.Nombre" />
-            </div>
-            <div class="form-group">
-                <label for="Ap_Paterno" class="control-label">Apellido Paterno:</label>
-                <input id="Ap_Paterno" class="form-control" @bind="entity.Ap_Paterno" />
-            </div>
-            <div class="form-group">
-                <label for="Ap_Materno" class="control-label">Apellido Materno:</label>
-                <input id="Ap_Materno" class="form-control" @bind="entity.Ap_Materno" />
-            </div>
-            <div class="form-group">
-                <label for="pass" class="control-label">Contraseña:</label>
-                <input id="pass" type="password" class="form-control" @bind="entity.pass" />
-            </div>
-            <div class="form-group">
-                <label for="confPass" class="control-label">Confirmar contraseña:</label>
-                <input id="confPass" type="password" class="form-control" @bind="entity.confPass" />
-            </div>
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="uname" class="control-label">Usuario:</label>
+            <input id="uname" required class="form-control" @bind="entity.UserName" />
         </div>
-    </div>
-    @if (!string.IsNullOrEmpty(message))
-    {
-        if (error)
+        <div class="form-group">
+            <label for="Nombre" class="control-label">Nombre:</label>
+            <input id="Nombre" class="form-control" @bind="entity.Nombre" />
+        </div>
+        <div class="form-group">
+            <label for="Ap_Paterno" class="control-label">Apellido Paterno:</label>
+            <input id="Ap_Paterno" class="form-control" @bind="entity.Ap_Paterno" />
+        </div>
+        <div class="form-group">
+            <label for="Ap_Materno" class="control-label">Apellido Materno:</label>
+            <input id="Ap_Materno" class="form-control" @bind="entity.Ap_Materno" />
+        </div>
+        <div class="form-group">
+            <label for="pass" class="control-label">Contraseña:</label>
+            <input id="pass" type="password" class="form-control" @bind="entity.pass" />
+        </div>
+        <div class="form-group">
+            <label for="confPass" class="control-label">Confirmar contraseña:</label>
+            <input id="confPass" type="password" class="form-control" @bind="entity.confPass" />
+        </div>
+        @if (!string.IsNullOrEmpty(message))
         {
-            <div class="alert alert-danger" role="alert">
-                @message
-            </div>
-        }
-        else
-        {
-            <div class="alert-success" role="alert">
-                @message
-            </div>
+            if (error)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @message
+                </div>
+            }
+            else
+            {
+                <div class="alert-success" role="alert">
+                    @message
+                </div>
+            }
+
         }
 
-    }
-    <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <input class="btn btn-danger" type="button" value="Cancel" @onclick="@Cancel" />
-                <input class="btn btn-success" type="submit" value="Save" @onclick="@SaveUsuario" />
-            </div>
+        <div class="col text-center">
+            <input class="btn btn-danger"  style="background-color: darkgray; border-color: darkgray; color: white;" type="submit" value="Cancelar" @onclick="@Cancel" />
+            <input class="btn btn-success" style="background-color: #da1f1f; border-color: #da1f1f; color: white;" type="submit" value="Guardar" @onclick="@SaveUsuario" />
         </div>
     </div>
 </EditForm>

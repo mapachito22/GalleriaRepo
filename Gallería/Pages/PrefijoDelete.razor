@@ -2,32 +2,21 @@
 @inject PrefijoService prefijoService
 @inject NavigationManager NavigationManager
 
-<h2>Borrar Gallo</h2>
-<br />
-<h3>¿Esta seguro de eliminar esteprefijo?</h3>
+<h3 style="color: #c41c1c; padding-inline-start: 15px;">¿Esta seguro de eliminar este prefijo?</h3>
 <EditForm Model="@entity">
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="form-group">
-                <label for="Id" class="control-label">Id:</label>
-                <input for="Id" disabled class="form-control" @bind="entity.Id" />
-            </div>
+        <div class="col-md-12">
             <div class="form-group">
                 <label for="Descripcion" class="control-label">Descripcion:</label>
                 <input for="Descripcion" disabled class="form-control" @bind="entity.Descripcion" />
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <input class="btn btn-primary" type="button" value="Cancelar" @onclick="@Cancel" />
-                <input class="btn btn-danger" type="button" value="Borrar" @onclick="@BorrarPrefijo" />
+
+            <div class="col text-center">
+                <input class="btn btn-primary" style="background-color: darkgray; border-color: darkgray; color: white;" type="submit" value="Cancelar" @onclick="@Cancel" />
+                <input class="btn btn-danger" style="background-color: #da1f1f; border-color: #da1f1f; color: white;" type="submit" value="Borrar" @onclick="@BorrarPrefijo" />
 
             </div>
         </div>
-    </div>
 
 </EditForm>
 

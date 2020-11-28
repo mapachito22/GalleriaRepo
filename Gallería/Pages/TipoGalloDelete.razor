@@ -7,28 +7,18 @@
 <h3>¿Esta seguro de eliminar este tipo de gallo?</h3>
 <EditForm Model="@entity">
 
-    <div class="row">
         <div class="col-md-8">
-            <div class="form-group">
-                <label for="Id" class="control-label">Id:</label>
-                <input for="Id" disabled class="form-control" @bind="entity.Id" />
-            </div>
             <div class="form-group">
                 <label for="Descripcion" class="control-label">Descripcion:</label>
                 <input for="Descripcion" disabled class="form-control" @bind="entity.Descripcion" />
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
+\
             <div class="form-group">
                 <input class="btn btn-primary" type="button" value="Cancelar" @onclick="@Cancel" />
                 <input class="btn btn-danger" type="button" value="Borrar" @onclick="@BorrarTipoGallo" />
 
             </div>
         </div>
-    </div>
-
 </EditForm>
 
 @code {
